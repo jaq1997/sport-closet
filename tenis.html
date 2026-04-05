@@ -4,22 +4,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nike — Mirage Co.</title>
+  <title>Tênis — Sport Closet</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    .nav-logo-link {
+        text-decoration: none;
+    }
+    .logo-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    footer .logo-text {
+        font-size: 20px;
+    }
+  </style>
 </head>
 
 <body class="brand-page">
   <div class="ticker">
     <div class="ticker-inner">
-      <span>MIRAGE COMPANY STREETWEAR</span><span>✦</span>
-      <span>BAPE · NIKE · ADIDAS · SUPREME · CARHARTT</span><span>✦</span>
-      <span>ENVIO EUROPA & BRASIL</span><span>✦</span>
-      <span>MIRAGE COMPANY STREETWEAR</span><span>✦</span>
-      <span>BAPE · NIKE · ADIDAS · SUPREME · CARHARTT</span><span>✦</span>
-      <span>ENVIO EUROPA & BRASIL</span><span>✦</span>
+        <span>BEM-VINDO À SPORT CLOSET</span><span>✦</span>
+        <span>OS LANÇAMENTOS PARA A COPA DO MUNDO 2026 ESTÃO AQUI</span><span>✦</span>
+        <span>BEM-VINDO À SPORT CLOSET</span><span>✦</span>
+        <span>OS LANÇAMENTOS PARA A COPA DO MUNDO 2026 ESTÃO AQUI</span><span>✦</span>
     </div>
   </div>
   <nav>
@@ -32,7 +45,7 @@
         </svg>
       </div>
     </div>
-    <a href="index.html" class="nav-logo-link"><img src="https://pub-9eb15062e53d4ad1a85362ac330e3002.r2.dev/logomirage.svg" class="logo-image" style="width: 120px; max-width: 100%;" alt="Mirage"></a>
+    <a href="index.html" class="nav-logo-link"><span class="logo-text">Sport Closet</span></a>
     <div class="nav-search nav-search-desktop">
       <input type="text" class="nav-search-input" placeholder="Pesquisar produtos (nome, marca, tipo)..."
         oninput="handleSearch(this.value)">
@@ -47,48 +60,44 @@
         oninput="handleSearch(this.value)">
     </div>
     <ul class="brand-links brand-links-desktop">
-      <li><a href="bape.html" class="">BAPE</a></li>
-      <li><a href="nike.html" class="">NIKE</a></li>
-      <li><a href="adidas.html" class="">ADIDAS</a></li>
-      <li><a href="supreme.html" class="">SUPREME</a></li>
-      <li><a href="carhartt.html" class="">CARHARTT</a></li>
+      <li><a href="copa2026.html" class="">Copa 2026</a></li>
+      <li><a href="camisas.html" class="">Camisas de Time</a></li>
+      <li><a href="tenis.html" class="active">Tênis</a></li>
+      <li><a href="roupas-verao.html" class="">Roupas de Verão</a></li>
     </ul>
   </div>
   <div class="brands-dropdown" id="brandsDropdown">
     <ul class="brand-links">
-      <li><a href="bape.html" class="">BAPE</a></li>
-      <li><a href="nike.html" class="">NIKE</a></li>
-      <li><a href="adidas.html" class="">ADIDAS</a></li>
-      <li><a href="supreme.html" class="">SUPREME</a></li>
-      <li><a href="carhartt.html" class="">CARHARTT</a></li>
+      <li><a href="copa2026.html" class="">Copa 2026</a></li>
+      <li><a href="camisas.html" class="">Camisas de Time</a></li>
+      <li><a href="tenis.html" class="active">Tênis</a></li>
+      <li><a href="roupas-verao.html" class="">Roupas de Verão</a></li>
     </ul>
   </div>
   <div class="hero-slider" id="heroSlider">
-    <div class="slide active" onclick="window.location='nike.html'">
+    <div class="slide active">
       <picture>
         <source media="(max-width: 768px)"
-          srcset="https://pub-9eb15062e53d4ad1a85362ac330e3002.r2.dev/banner_nike_mobile.png">
-        <img src="https://pub-9eb15062e53d4ad1a85362ac330e3002.r2.dev/banner_nike_desktop.png" alt="Nike Collection"
+          srcset="https://via.placeholder.com/768x300.png?text=Tênis">
+        <img src="https://via.placeholder.com/1920x400.png?text=Tênis" alt="Tênis"
           loading="eager">
       </picture>
       <div class="slide-content">
-        <div class="slide-subtitle">NEW ARRIVALS</div>
-        <div class="slide-title">NIKE<br>COLLECTION</div>
-        <button class="slide-btn">SHOP NOW</button>
+        <div class="slide-subtitle">CATEGORIA</div>
+        <div class="slide-title">TÊNIS</div>
       </div>
     </div>
   </div>
   <div class="filter-section">
-    <div class="section-title">NIKE <span>COLLECTION</span></div>
+    <div class="section-title"><span>TÊNIS</span></div>
 
-    <div class="fg-label">Tipo de peça</div>
-    <button class="fb active" data-g="tipo" data-v="todos" onclick="setFilter('tipo','todos')">TODOS</button>
-    <button class="fb" data-g="tipo" data-v="moletons" onclick="setFilter('tipo','moletons')">MOLETONS</button>
-    <button class="fb" data-g="tipo" data-v="jaquetas" onclick="setFilter('tipo','jaquetas')">JAQUETAS</button>
-    <button class="fb" data-g="tipo" data-v="camisetas" onclick="setFilter('tipo','camisetas')">CAMISETAS</button>
-    <button class="fb" data-g="tipo" data-v="calcas" onclick="setFilter('tipo','calcas')">CALÇAS</button>
-
-  </div>
+    <div class="fg-label">Filtrar por Marca:</div>
+    <div class="filter-group">
+        <button class="fb active" data-g="marca" data-v="todos" onclick="setFilter('marca','todos')">TODAS</button>
+        <button class="fb" data-g="marca" data-v="nike" onclick="setFilter('marca','nike')">NIKE</button>
+        <button class="fb" data-g="marca" data-v="adidas" onclick="setFilter('marca','adidas')">ADIDAS</button>
+        <button class="fb" data-g="marca" data-v="new balance" onclick="setFilter('marca','new balance')">NEW BALANCE</button>
+    </div>
   </div>
   <div class="products-section">
     <div class="ph">
@@ -96,13 +105,13 @@
     </div>
     <div class="grid" id="grid"></div>
   </div>
-  <div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="overlay" id="overlay">
     <div class="modal">
-      <button class="mcls" onclick="closeModal()">✕</button>
+      <button class="mcls">✕</button>
       <div class="modal-img-wrap">
-        <button class="carousel-chevron left" id="chevronLeft" onclick="carouselStep(-1)">&#8249;</button>
+        <button class="carousel-chevron left" id="chevronLeft" onclick="carouselStep(-1)">‹</button>
         <div class="carousel-track" id="carouselTrack"></div>
-        <button class="carousel-chevron right" id="chevronRight" onclick="carouselStep(1)">&#8250;</button>
+        <button class="carousel-chevron right" id="chevronRight" onclick="carouselStep(1)">›</button>
         <div class="carousel-dots" id="carouselDots"></div>
       </div>
       <div class="modal-body">
@@ -115,20 +124,14 @@
         <div class="sizes" id="mSizes"></div>
         <div class="m-desc" id="mDesc"></div>
         <button class="m-wpp" id="mWpp">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-            <path
-              d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.535 5.858L.057 23.633a.5.5 0 0 0 .61.61l5.775-1.478A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.944 9.944 0 0 1-5.088-1.392l-.363-.216-3.763.963.982-3.637-.237-.376A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
-          </svg>
           Pedir pelo WhatsApp
         </button>
       </div>
     </div>
   </div>
   <footer>
-    <a href="index.html"><img src="https://pub-9eb15062e53d4ad1a85362ac330e3002.r2.dev/logomirage.svg" class="logo-image" style="width: 120px; max-width: 100%;" alt="Mirage"></a>
-    <div>© 2025 Mirage Co. — Streetwear</div>
+    <a href="index.html" class="nav-logo-link"><span class="logo-text">Sport Closet</span></a>
+    <div>© 2026 Sport Closet — Todos os direitos reservados</div>
   </footer>
   <script src="produtos.js"></script>
   <script src="loja.js"></script>
