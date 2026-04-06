@@ -51,7 +51,7 @@
         oninput="handleSearch(this.value)">
     </div>
     <div class="nav-right">
-      <button class="region-btn" onclick="toggleRegion()" id="regionBtn" data-eu="0">🌎 Brasil (R$)</button>
+      <button class="region-btn" onclick="toggleRegion()" id="regionBtn" data-usa="0">🇧🇷 Brasil (R$)</button>
     </div>
   </nav>
   <div class="brand-bar">
@@ -77,10 +77,8 @@
   <div class="hero-slider" id="heroSlider">
     <div class="slide active" onclick="window.location='copa2026.html'">
       <picture>
-        <source media="(max-width: 768px)"
-          srcset="https://via.placeholder.com/768x300.png?text=Seleções">
-        <img src="https://via.placeholder.com/1920x700.png?text=Camisas+de+Seleção" alt="Banner Camisas de Seleção"
-          loading="eager">
+        <source media="(max-width: 768px)" srcset="banners/hero-1-mobile.jpg">
+        <img src="banners/hero-1-desktop.jpg" alt="Banner Camisas de Seleção" loading="eager">
       </picture>
       <div class="slide-content">
         <div class="slide-subtitle">NOVA COLEÇÃO</div>
@@ -90,10 +88,8 @@
     </div>
     <div class="slide" onclick="window.location='tenis.html'">
       <picture>
-        <source media="(max-width: 768px)"
-          srcset="https://via.placeholder.com/768x300.png?text=Tênis">
-        <img src="https://via.placeholder.com/1920x700.png?text=Tênis" alt="Banner Tênis"
-          loading="lazy">
+        <source media="(max-width: 768px)" srcset="banners/hero-2-mobile.jpg">
+        <img src="banners/hero-2-desktop.jpg" alt="Banner Tênis" loading="lazy">
       </picture>
       <div class="slide-content">
         <div class="slide-subtitle">PISANDO COM ESTILO</div>
@@ -101,12 +97,10 @@
         <button class="slide-btn">EXPLORE</button>
       </div>
     </div>
-    <div class.log="slide" onclick="window.location='roupas-verao.html'">
+    <div class="slide" onclick="window.location='roupas-verao.html'">
       <picture>
-        <source media="(max-width: 768px)"
-          srcset="https://via.placeholder.com/768x300.png?text=Roupas+de+Verão">
-        <img src="https://via.placeholder.com/1920x700.png?text=Roupas+de+Verão" alt="Banner Roupas de Verão"
-          loading="lazy">
+        <source media="(max-width: 768px)" srcset="banners/hero-3-mobile.jpg">
+        <img src="banners/hero-3-desktop.jpg" alt="Banner Roupas de Verão" loading="lazy">
       </picture>
       <div class="slide-content">
         <div class="slide-subtitle">PARA O DIA A DIA</div>
@@ -125,9 +119,12 @@
     <div class="grid" id="grid-drop-exclusivo"></div>
   </div>
   <!-- 3. Banner Intercalado A -->
-  <div class="promo-banner" style="text-align: center; padding: 50px 0; background-color: #1a1a1a;">
-    <h2 style="font-size: 24px; color: white;">[Placeholder para banner de categoria]</h2>
-  </div>
+  <a href="camisas.html" class="promo-banner">
+    <picture>
+      <source media="(max-width: 768px)" srcset="banners/promo-1-mobile.jpg">
+      <img src="banners/promo-1-desktop.jpg" alt="Coleção Camisas" loading="lazy">
+    </picture>
+  </a>
   <!-- 4. Segunda Seção de Produtos -->
   <div class="filter-section">
     <div class="section-title">MAIS <span>PROCURADOS</span></div>
@@ -136,9 +133,12 @@
     <div class="grid" id="grid-mais-vistos"></div>
   </div>
   <!-- 5. Banner Intercalado B -->
-  <div class="promo-banner" style="text-align: center; padding: 50px 0; background-color: #1a1a1a;">
-    <h2 style="font-size: 24px; color: white;">[Placeholder para outro banner]</h2>
-  </div>
+  <a href="tenis.html" class="promo-banner">
+    <picture>
+      <source media="(max-width: 768px)" srcset="banners/promo-2-mobile.jpg">
+      <img src="banners/promo-2-desktop.jpg" alt="Coleção Tênis" loading="lazy">
+    </picture>
+  </a>
   <div class="overlay" id="overlay">
     <div class="modal">
       <button class="mcls">✕</button>

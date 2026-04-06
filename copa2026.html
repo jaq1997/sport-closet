@@ -51,7 +51,7 @@
         oninput="handleSearch(this.value)">
     </div>
     <div class="nav-right">
-      <button class="region-btn" onclick="toggleRegion()" id="regionBtn" data-eu="0">🌎 Brasil (R$)</button>
+      <button class="region-btn" onclick="toggleRegion()" id="regionBtn" data-usa="0">🇧🇷 Brasil (R$)</button>
     </div>
   </nav>
   <div class="brand-bar">
@@ -91,8 +91,14 @@
   <div class="filter-section">
     <div class="section-title">COPA <span>2026</span></div>
 
-    <div class="fg-label">Filtrar por</div>
-    <button class="fb active" data-g="tipo" data-v="todos" onclick="setFilter('tipo','todos')">TODOS</button>
+    <div class="fg-label">Filtrar por Patrocinadora:</div>
+    <div class="filter-group">
+        <button class="fb active" data-g="tipo" data-v="todos" onclick="setFilter('tipo','todos')">TODAS</button>
+        <button class="fb" data-g="tipo" data-v="nike" onclick="setFilter('tipo','nike')">NIKE</button>
+        <button class="fb" data-g="tipo" data-v="adidas" onclick="setFilter('tipo','adidas')">ADIDAS</button>
+        <button class="fb" data-g="tipo" data-v="puma" onclick="setFilter('tipo','puma')">PUMA</button>
+        <button class="fb" data-g="tipo" data-v="outras" onclick="setFilter('tipo','outras')">OUTRAS</button>
+    </div>
   </div>
   </div>
   <div class="products-section">

@@ -58,13 +58,15 @@ const i18n = {
 };
 
 /* ─── HELPERS ──────────────────────────────────────────────────────────── */
-function isEu() { return document.getElementById('regionBtn')?.dataset.eu === '1'; }
-function getLang() { return isEu() ? i18n.en : i18n.pt; }
+const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+
+function isUsa() { return document.getElementById('regionBtn')?.dataset.usa === '1'; }
+function getLang() { return isUsa() ? i18n.en : i18n.pt; }
 
 function tStr(str) {
   if (!str) return '';
   const lang = getLang();
-  if (!isEu() || !lang.types) return str;
+  if (!isUsa() || !lang.types) return str;
   return lang.types[str.toLowerCase()] || str;
 }
 
@@ -74,8 +76,8 @@ function wppMsg(p, sz) {
 }
 
 function formatPrice(p) {
-  if (isEu()) {
-    return p.eur && p.eur > 0 ? `€ ${p.eur.toFixed(2).replace('.', ',')}` : getLang().price;
+  if (isUsa()) {
+    return p.usd && p.usd > 0 ? `$ ${p.usd.toFixed(2)}` : getLang().price;
   }
   return p.brl && p.brl > 0 ? `R$ ${p.brl.toFixed(2).replace('.', ',')}` : getLang().price;
 }
@@ -92,7 +94,26 @@ function setFilter(group, value) {
 }
 
 function handleSearch(val) {
-  searchQuery = (val || '').toLowerCase().trim();
+  searchQuery = norm(val);
+  renderGrid();
+}
+
+function toggleRegion() {
+  const btn = document.getElementById('regionBtn');
+  if (!btn) return;
+  const isCurrentlyUsa = btn.dataset.usa === '1';
+  if (isCurrentlyUsa) {
+    btn.dataset.usa = '0';
+    btn.textContent = '🇧🇷 Brasil (R$)';
+  } else {
+    btn.dataset.usa = '1';
+    btn.textContent = '🇺🇸 USA ($)';
+  }
+  
+  // Salva preferência (opcional, mas bom)
+  localStorage.setItem('sport_closet_usa', btn.dataset.usa);
+  
+  updateStaticTexts();
   renderGrid();
 }
 
@@ -125,7 +146,7 @@ function renderGrid() {
   const source = window.produtos || [];
   const lang = getLang();
 
-  if (pageName === 'index') {
+  if (pageName === 'index' && !searchQuery) {
     const selecionados = embaralhar(source);
     desenharCards('grid-drop-exclusivo', selecionados.slice(0, 10));
     desenharCards('grid-mais-vistos', selecionados.slice(10, 20));
@@ -144,17 +165,40 @@ function renderGrid() {
       }
 
       const matchLigaFilter = pageName !== 'camisas' || activeFilters.liga === 'todos' || pLiga === activeFilters.liga;
-      const matchMarcaFilter = pageName !== 'tenis' || activeFilters.marca === 'todos' || pMarca === activeFilters.marca;
-      const matchPecaFilter = pageName !== 'roupas-verao' || activeFilters.peca === 'todos' || pNome.includes(activeFilters.peca);
-      const matchBusca = !searchQuery || pNome.includes(searchQuery) || pMarca.includes(searchQuery) || pTipo.includes(searchQuery) || pLiga.includes(searchQuery);
+      
+      // Ajuste filtro marca para tênis e roupas de verão
+      const isRoupasVerao = pageName === 'roupas-verao';
+      const matchMarcaFilter = (pageName !== 'tenis' && !isRoupasVerao) || activeFilters.marca === 'todos' || pMarca === activeFilters.marca;
+      
+      // Ajuste filtro copa para patrocinadora (Nike, Adidas, Puma, Outras)
+      let matchCopaSponsor = true;
+      if (pageName === 'copa2026' && activeFilters.tipo !== 'todos') {
+          if (activeFilters.tipo === 'outras') {
+              matchCopaSponsor = !['nike', 'adidas', 'puma'].includes(pMarca);
+          } else {
+              matchCopaSponsor = pMarca === activeFilters.tipo;
+          }
+      }
 
-      return matchPageType && matchLigaFilter && matchMarcaFilter && matchPecaFilter && matchBusca;
+      // Busca normalizada (sem acentos)
+      const matchBusca = !searchQuery || 
+                         norm(pNome).includes(searchQuery) || 
+                         norm(pMarca).includes(searchQuery) || 
+                         norm(pTipo).includes(searchQuery) || 
+                         norm(pLiga).includes(searchQuery);
+
+      return matchPageType && matchLigaFilter && matchMarcaFilter && matchCopaSponsor && matchBusca;
     });
 
+    const targetGrid = pageName === 'index' ? 'grid-drop-exclusivo' : 'grid';
     const countEl = document.getElementById('pcount');
     if (countEl) countEl.textContent = `${list.length} ${lang.found}`;
     
-    desenharCards('grid', list);
+    desenharCards(targetGrid, list);
+    if (pageName === 'index') {
+        const grid2 = document.getElementById('grid-mais-vistos');
+        if (grid2) grid2.innerHTML = ''; // Limpa a segunda vitrine na busca da home
+    }
   }
 }
 
@@ -287,13 +331,6 @@ function updateChevrons() {
 
 /* ─── INICIALIZAÇÃO ──────────────────────────────────────────────────────── */
 function init() {
-  updateStaticTexts();
-  renderGrid();
-
-  document.querySelector('.mcls').addEventListener('click', () => closeModal());
-  document.getElementById('overlay').addEventListener('click', (e) => closeModal(e));
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
   const inputs = document.querySelectorAll('.nav-search-input');
   inputs.forEach(input => {
     input.addEventListener('input', () => {
@@ -302,6 +339,24 @@ function init() {
       handleSearch(val);
     });
   });
+
+  document.querySelector('.mcls')?.addEventListener('click', () => closeModal());
+  document.getElementById('overlay')?.addEventListener('click', (e) => closeModal(e));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // Carrega preferência de região
+  const savedUsa = localStorage.getItem('sport_closet_usa');
+  const btn = document.getElementById('regionBtn');
+  if (btn && savedUsa === '1') {
+      btn.dataset.usa = '1';
+      btn.textContent = '🇺🇸 USA ($)';
+      updateStaticTexts();
+      renderGrid();
+  } else if (btn) {
+      btn.textContent = '🇧🇷 Brasil (R$)';
+      updateStaticTexts();
+      renderGrid();
+  }
 }
 
 /* ─── INTEGRAÇÃO PLANILHA GOOGLE SHEETS ──────────────────────────────────── */
@@ -361,7 +416,7 @@ function processCSVData(data) {
       marca: getVal(row, ['marca']).toLowerCase(),
       tipo: getVal(row, ['tipo']).toLowerCase(),
       brl: parseFloat(getVal(row, ['preco_br', 'preco_brl', 'preco']).replace(',', '.')) || 0,
-      eur: parseFloat(getVal(row, ['preco_eur']).replace(',', '.')) || 0,
+      usd: parseFloat(getVal(row, ['preco_eur', 'preco_usd']).replace(',', '.')) || 0,
       sizes: sizes,
       desc: getVal(row, ['descricao', 'desc', 'descricao ']),
       badge: getVal(row, ['badge', 'badge ']),
