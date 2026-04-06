@@ -311,8 +311,19 @@ nav {
   object-fit: cover;
   object-position: center;
   display: block;
-  filter: brightness(0.65);
   transition: transform 6s linear;
+}
+
+.slide::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(8, 8, 8, 0.85) 0%, rgba(8, 8, 8, 0.4) 40%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .slide.active img {
@@ -321,9 +332,13 @@ nav {
 
 .slide-content {
   position: absolute;
-  bottom: 12%;
-  left: 5%;
+  bottom: 0px;
+  left: 0px;
+  padding: 0 5% 10% 5%;
   pointer-events: none;
+  z-index: 5;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .slide-subtitle {
@@ -334,7 +349,8 @@ nav {
   text-transform: uppercase;
   transform: translateY(20px);
   opacity: 0;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  font-weight: 700;
 }
 
 .slide.active .slide-subtitle {
@@ -343,13 +359,13 @@ nav {
 
 .slide-title {
   font-family: var(--font-d);
-  font-size: 72px;
-  line-height: 0.9;
-  letter-spacing: 0.02em;
-  margin-bottom: 20px;
-  transform: translateY(20px);
+  font-size: clamp(60px, 9vw, 92px);
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  transform: translateY(30px);
   opacity: 0;
-  text-shadow: 0 4px 20px rgba(0,0,0,0.9);
+  text-shadow: 0 4px 24px rgba(0,0,0,0.4);
 }
 
 .slide.active .slide-title {
@@ -357,25 +373,29 @@ nav {
 }
 
 .slide-btn {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
   color: var(--white);
-  border: 1px solid var(--white);
-  padding: 10px 24px;
+  border: 1.5px solid var(--white);
+  padding: 12px 32px;
   font-family: var(--font-b);
   font-size: 11px;
-  letter-spacing: 0.1em;
+  font-weight: 700;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   pointer-events: auto;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   transform: translateY(20px);
   opacity: 0;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 .slide-btn:hover {
   background: var(--white);
   color: var(--black);
+  transform: scale(1.05);
+  box-shadow: 0 8px 32px rgba(255,255,255,0.2);
 }
 
 .slide.active .slide-btn {
