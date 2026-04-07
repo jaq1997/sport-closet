@@ -9,7 +9,7 @@ const pageName = (path === '' || path === 'index.html') ? 'index' : path.replace
 
 const pageTypeMap = {
     'copa2026': 'camisa de seleção',
-    'roupas-verao': 'roupa - verão',
+    'roupas-verao': ['camiseta', 'shorts', 'regata', 'casaco', 'legging'],
     'camisas': 'camisa de time',
     'tenis': 'tênis'
 };
@@ -52,7 +52,11 @@ const i18n = {
       "camisa de time": "Club Jersey",
       "camisa de seleção": "National Jersey",
       "tênis": "Sneakers",
-      "roupa - verão": "Summer Wear"
+      "camiseta": "T-Shirt",
+      "shorts": "Shorts",
+      "regata": "Tank Top",
+      "casaco": "Jacket",
+      "legging": "Legging"
     }
   }
 };
@@ -67,7 +71,13 @@ function tStr(str) {
   if (!str) return '';
   const lang = getLang();
   if (!isUsa() || !lang.types) return str;
-  return lang.types[str.toLowerCase()] || str;
+  const lowerStr = str.toLowerCase();
+  if (lang.types[lowerStr]) return lang.types[lowerStr];
+  // Fallback for multi-type pages
+  for (const key in lang.types) {
+    if (lowerStr.includes(key)) return lang.types[key];
+  }
+  return str;
 }
 
 function wppMsg(p, sz) {
@@ -76,10 +86,12 @@ function wppMsg(p, sz) {
 }
 
 function formatPrice(p) {
-  if (isUsa()) {
-    return p.usd && p.usd > 0 ? `$ ${p.usd.toFixed(2)}` : getLang().price;
-  }
-  return p.brl && p.brl > 0 ? `R$ ${p.brl.toFixed(2).replace('.', ',')}` : getLang().price;
+    if (isUsa()) {
+        return p.usd && p.usd > 0 ? `$${p.usd.toFixed(2)}` : getLang().price;
+    }
+    const price = p.brl || 0;
+    const formatted = price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    return price > 0 ? formatted : getLang().price;
 }
 
 const wppSvg = `<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.535 5.858L.057 23.633a.5.5 0 0 0 .61.61l5.775-1.478A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.944 9.944 0 0 1-5.088-1.392l-.363-.216-3.763.963.982-3.637-.237-.376A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>`;
@@ -88,7 +100,7 @@ const wppSvg = `<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.75
 function setFilter(group, value) {
   activeFilters[group] = value.toLowerCase();
   document.querySelectorAll(`.fb[data-g="${group}"]`).forEach(b => {
-    b.classList.toggle('active', b.dataset.v.toLowerCase() === value.toLowerCase());
+    b.classList.toggle('active', norm(b.dataset.v) === norm(value));
   });
   renderGrid();
 }
@@ -102,17 +114,9 @@ function toggleRegion() {
   const btn = document.getElementById('regionBtn');
   if (!btn) return;
   const isCurrentlyUsa = btn.dataset.usa === '1';
-  if (isCurrentlyUsa) {
-    btn.dataset.usa = '0';
-    btn.textContent = '🇧🇷 Brasil (R$)';
-  } else {
-    btn.dataset.usa = '1';
-    btn.textContent = '🇺🇸 USA ($)';
-  }
-  
-  // Salva preferência (opcional, mas bom)
+  btn.dataset.usa = isCurrentlyUsa ? '0' : '1';
+  btn.textContent = isCurrentlyUsa ? '🇧🇷 Brasil (R$)' : '🇺🇸 USA ($)';
   localStorage.setItem('sport_closet_usa', btn.dataset.usa);
-  
   updateStaticTexts();
   renderGrid();
 }
@@ -152,25 +156,23 @@ function renderGrid() {
     desenharCards('grid-mais-vistos', selecionados.slice(10, 20));
   } else {
     const list = source.filter(p => {
-      const pTipo = (p.tipo || "").toLowerCase();
-      const pMarca = (p.marca || "").toLowerCase();
-      const pNome = (p.nome || "").toLowerCase();
-      const pLiga = (p.liga || "").toLowerCase();
+      const pTipo = norm(p.tipo);
+      const pMarca = norm(p.marca);
+      const pNome = norm(p.nome);
+      const pLiga = norm(p.liga);
 
       let matchPageType = false;
       if (pageType === 'todos' || pageName === 'index') {
           matchPageType = true;
+      } else if (Array.isArray(pageType)) {
+          matchPageType = pageType.includes(pTipo);
       } else {
-          matchPageType = pTipo === pageType || pTipo.includes(pageType) || pageType.includes(pTipo);
+          matchPageType = pTipo === pageType;
       }
 
       const matchLigaFilter = pageName !== 'camisas' || activeFilters.liga === 'todos' || pLiga === activeFilters.liga;
+      const matchMarcaFilter = (pageName !== 'tenis' && pageName !== 'roupas-verao') || activeFilters.marca === 'todos' || pMarca === activeFilters.marca;
       
-      // Ajuste filtro marca para tênis e roupas de verão
-      const isRoupasVerao = pageName === 'roupas-verao';
-      const matchMarcaFilter = (pageName !== 'tenis' && !isRoupasVerao) || activeFilters.marca === 'todos' || pMarca === activeFilters.marca;
-      
-      // Ajuste filtro copa para patrocinadora (Nike, Adidas, Puma, Outras)
       let matchCopaSponsor = true;
       if (pageName === 'copa2026' && activeFilters.tipo !== 'todos') {
           if (activeFilters.tipo === 'outras') {
@@ -180,12 +182,11 @@ function renderGrid() {
           }
       }
 
-      // Busca normalizada (sem acentos)
       const matchBusca = !searchQuery || 
-                         norm(pNome).includes(searchQuery) || 
-                         norm(pMarca).includes(searchQuery) || 
-                         norm(pTipo).includes(searchQuery) || 
-                         norm(pLiga).includes(searchQuery);
+                         pNome.includes(searchQuery) || 
+                         pMarca.includes(searchQuery) || 
+                         pTipo.includes(searchQuery) || 
+                         pLiga.includes(searchQuery);
 
       return matchPageType && matchLigaFilter && matchMarcaFilter && matchCopaSponsor && matchBusca;
     });
@@ -197,7 +198,7 @@ function renderGrid() {
     desenharCards(targetGrid, list);
     if (pageName === 'index') {
         const grid2 = document.getElementById('grid-mais-vistos');
-        if (grid2) grid2.innerHTML = ''; // Limpa a segunda vitrine na busca da home
+        if (grid2) grid2.innerHTML = '';
     }
   }
 }
@@ -217,7 +218,7 @@ function desenharCards(containerId, lista) {
   }
 
   grid.innerHTML = lista.map(p => {
-    const fotoUrl = encodeURI(BASE_URL_FOTOS + p.imgs[0]);
+    const fotoUrl = p.imgs && p.imgs[0] ? encodeURI(BASE_URL_FOTOS + p.imgs[0]) : 'https://placehold.co/400x500?text=Foto+Indisponível';
     return `
     <div class="card" onclick="openModal(${p.id})">
       <div class="card-img">
@@ -226,19 +227,14 @@ function desenharCards(containerId, lista) {
       </div>
       <div class="card-info">
         <div class="card-brand">${p.marca.toUpperCase()}</div>
-        <div class="card-name">${tStr(p.nome)}</div>
+        <div class="card-name">${p.nome}</div>
         <div class="card-footer">
           <div class="card-price">${formatPrice(p)}</div>
-          <button class="wpp-btn" onclick="event.stopPropagation();window.open('https://wa.me/${WPP}?text=${wppMsg(p, null)}','_blank')">
-            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.535 5.858L.057 23.633a.5.5 0 0 0 .61.61l5.775-1.478A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.944 9.944 0 0 1-5.088-1.392l-.363-.216-3.763.963.982-3.637-.237-.376A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-            ${lang.buy}
-          </button>
         </div>
       </div>
     </div>`;
   }).join('');
 }
-
 
 /* ─── MODAL ─────────────────────────────────────────────────────────────── */
 let carouselImgs = [];
@@ -256,12 +252,13 @@ function openModal(id) {
   renderCarousel();
 
   document.getElementById('mBrand').textContent = curProd.marca.toUpperCase();
-  document.getElementById('mName').textContent = tStr(curProd.nome);
-  document.getElementById('mType').textContent = (tStr(curProd.tipo) || "").toUpperCase();
+  document.getElementById('mName').textContent = curProd.nome;
+  document.getElementById('mType').textContent = tStr(curProd.tipo).toUpperCase();
   document.getElementById('mPrice').textContent = formatPrice(curProd);
+  document.getElementById('mPriceAlt').textContent = isUsa() ? formatPrice({ brl: curProd.brl }) : formatPrice({ usd: curProd.usd });
   document.getElementById('mDesc').textContent = curProd.desc || "";
 
-  document.getElementById('mSizes').innerHTML = (curProd.sizes || ["P", "M", "G", "GG"])
+  document.getElementById('mSizes').innerHTML = (curProd.tamanhos || [])
     .map(s => `<button class="sz" onclick="selSize('${s}',this)">${s}</button>`).join('');
 
   const wppBtn = document.getElementById('mWpp');
@@ -325,49 +322,55 @@ function updateDots() {
 }
 
 function updateChevrons() {
-  document.getElementById('chevronLeft').style.display = carouselImgs.length > 1 && carouselIdx > 0 ? 'flex' : 'none';
-  document.getElementById('chevronRight').style.display = carouselImgs.length > 1 && carouselIdx < carouselImgs.length - 1 ? 'flex' : 'none';
+    const leftChevron = document.getElementById('chevronLeft');
+    const rightChevron = document.getElementById('chevronRight');
+    if(leftChevron) leftChevron.style.display = carouselImgs.length > 1 && carouselIdx > 0 ? 'flex' : 'none';
+    if(rightChevron) rightChevron.style.display = carouselImgs.length > 1 && carouselIdx < carouselImgs.length - 1 ? 'flex' : 'none';
 }
+
 
 /* ─── INICIALIZAÇÃO ──────────────────────────────────────────────────────── */
 function init() {
-  const inputs = document.querySelectorAll('.nav-search-input');
-  inputs.forEach(input => {
-    input.addEventListener('input', () => {
-      const val = input.value;
-      inputs.forEach(other => { if (other !== input) other.value = val; });
-      handleSearch(val);
+    renderGrid();
+    const inputs = document.querySelectorAll('.nav-search-input');
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            const val = input.value;
+            inputs.forEach(other => { if (other !== input) other.value = val; });
+            handleSearch(val);
+        });
     });
-  });
 
-  document.querySelector('.mcls')?.addEventListener('click', () => closeModal());
-  document.getElementById('overlay')?.addEventListener('click', (e) => closeModal(e));
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    document.querySelector('.mcls')?.addEventListener('click', () => closeModal());
+    document.getElementById('overlay')?.addEventListener('click', (e) => closeModal(e));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-  // Carrega preferência de região
-  const savedUsa = localStorage.getItem('sport_closet_usa');
-  const btn = document.getElementById('regionBtn');
-  if (btn && savedUsa === '1') {
-      btn.dataset.usa = '1';
-      btn.textContent = '🇺🇸 USA ($)';
-      updateStaticTexts();
-      renderGrid();
-  } else if (btn) {
-      btn.textContent = '🇧🇷 Brasil (R$)';
-      updateStaticTexts();
-      renderGrid();
-  }
+    const savedUsa = localStorage.getItem('sport_closet_usa');
+    const btn = document.getElementById('regionBtn');
+    if (btn && savedUsa === '1') {
+        btn.dataset.usa = '1';
+        btn.textContent = '🇺🇸 USA ($)';
+    } else if (btn) {
+        btn.textContent = '🇧🇷 Brasil (R$)'
+    }
+    updateStaticTexts();
+    renderGrid();
 }
 
-/* ─── INTEGRAÇÃO PLANILHA GOOGLE SHEETS ──────────────────────────────────── */
-const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTJJsi5MlreQayUKZtiZIwb0RcZCPa5ngJOkOmq-uCkKvtxVD8oRvYIJuYosn-22qsXtCsZsHJHfjhs/pub?output=csv";
+/* ─── CARREGAMENTO DOS DADOS DO CSV LOCAL ──────────────────────────────── */
+const LOCAL_CSV_URL = 'Tabela_Sport_Closet_2026.csv';
 
 function bootStore() {
   const sc = document.createElement('script');
   sc.src = "https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js";
   sc.onload = () => {
-    fetch(GOOGLE_SHEET_CSV_URL)
-      .then(r => r.text())
+    fetch(LOCAL_CSV_URL)
+      .then(response => {
+          if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.text();
+      })
       .then(csvText => {
         Papa.parse(csvText, {
           header: true,
@@ -375,12 +378,18 @@ function bootStore() {
           complete: function(results) {
             processCSVData(results.data);
             init();
+          },
+          error: function(err) {
+            console.error("Erro ao parsear CSV:", err);
+            window.produtos = [];
+            init();
           }
         });
       }).catch(err => {
-        console.error("Erro ao carregar do Google Sheets", err);
+        console.error("Erro ao carregar do CSV local", err);
+        const grid = document.getElementById('grid');
+        if(grid) grid.innerHTML = '<div class="empty">Erro ao carregar produtos. Verifique o console.</div>';
         window.produtos = [];
-        window.todos = [];
         init();
       });
   };
@@ -388,43 +397,25 @@ function bootStore() {
 }
 
 function processCSVData(data) {
-  const finalProducts = [];
-  const getVal = (row, possibleKeys) => {
-    for (let k of possibleKeys) {
-      if (row[k] !== undefined) return String(row[k]).trim();
-    }
-    return '';
-  };
-
-  data.forEach((row, index) => {
-    const nome = getVal(row, ['nome_produto', 'nome', 'nome_produto ']);
-    if (!nome) return;
-
-    const imgs = [];
-    ['arquivo_foto_principal', 'arquivo_foto_2', 'arquivo_foto_3'].forEach(k => {
-      const v = row[k] ? row[k].trim() : '';
-      if (v) imgs.push(v);
-    });
-
-    const szStr = getVal(row, ['tamanhos', 'tamanho']);
+  window.produtos = data.map((row, index) => {
+    const szStr = row.tamanhos || '';
     const sep = szStr.includes(';') ? ';' : ',';
-    const sizes = szStr.split(sep).map(s => s.trim()).filter(s => s);
+    const tamanhos = szStr.split(sep).map(s => s.trim()).filter(s => s);
 
-    finalProducts.push({
-      id: index + 1,
-      nome: nome,
-      marca: getVal(row, ['marca']).toLowerCase(),
-      tipo: getVal(row, ['tipo']).toLowerCase(),
-      brl: parseFloat(getVal(row, ['preco_br', 'preco_brl', 'preco']).replace(',', '.')) || 0,
-      usd: parseFloat(getVal(row, ['preco_eur', 'preco_usd']).replace(',', '.')) || 0,
-      sizes: sizes,
-      desc: getVal(row, ['descricao', 'desc', 'descricao ']),
-      badge: getVal(row, ['badge', 'badge ']),
-      imgs: imgs
-    });
-  });
-  window.produtos = finalProducts;
-  window.todos = finalProducts;
+    return {
+      id: row.id || index + 1,
+      nome: row.nome || '',
+      marca: (row.marca || '').toLowerCase(),
+      tipo: (row.tipo || '').toLowerCase(),
+      liga: (row.liga || '').toLowerCase(),
+      brl: parseFloat((row.preco_brl || '0').replace(',', '.')) || 0,
+      usd: parseFloat((row.preco_usa || '0').replace(',', '.')) || 0,
+      tamanhos: tamanhos,
+      desc: row.descricao || '',
+      badge: row.badge || '',
+      imgs: [row.img_1, row.img_2, row.img_3].filter(img => img && img.trim())
+    };
+  }).filter(p => p.nome);
 }
 
 document.addEventListener('DOMContentLoaded', bootStore);
