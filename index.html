@@ -7,8 +7,9 @@
   <title>Sport Closet — Camisas de Time, Tênis e Roupas de Verão</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+
   <style>
     .nav-logo-link {
         text-decoration: none;
@@ -75,10 +76,24 @@
     </ul>
   </div>
   <div class="hero-slider" id="heroSlider">
-    <div class="slide active" onclick="window.location='copa2026.html'">
+    <div class="slide active slide-right" onclick="window.location='tenis.html'">
+      <picture>
+        <source media="(max-width: 768px)" srcset="banners/hero-3-mobile.jpg">
+        <img src="banners/hero-3-desktop.jpg" alt="Banner New Balance" loading="eager">
+      </picture>
+      <div class="slide-content">
+        <div class="slide-subtitle">ESTILO URBANO</div>
+        <div class="slide-title">NEW BALANCE<br>530 SERIES</div>
+        <button class="slide-btn">EXPLORE AGORA</button>
+      </div>
+
+
+
+    </div>
+    <div class="slide" onclick="window.location='copa2026.html'">
       <picture>
         <source media="(max-width: 768px)" srcset="banners/hero-1-mobile.jpg">
-        <img src="banners/hero-1-desktop.jpg" alt="Banner Camisas de Seleção" loading="eager">
+        <img src="banners/hero-1-desktop.jpg" alt="Banner Copa 2026" loading="lazy">
       </picture>
       <div class="slide-content">
         <div class="slide-subtitle">NOVA COLEÇÃO</div>
@@ -86,47 +101,92 @@
         <button class="slide-btn">VEJA AGORA</button>
       </div>
     </div>
-    <div class="slide" onclick="window.location='tenis.html'">
-      <picture>
-        <source media="(max-width: 768px)" srcset="banners/hero-2-mobile.jpg">
-        <img src="banners/hero-2-desktop.jpg" alt="Banner Tênis" loading="lazy">
-      </picture>
-      <div class="slide-content">
-        <div class="slide-subtitle">PISANDO COM ESTILO</div>
-        <div class="slide-title">OS MELHORES<br>TÊNIS</div>
-        <button class="slide-btn">EXPLORE</button>
-      </div>
+  </div>
+
+
+  <!-- 1. MOSAICO 2x2 (ESTILO NIKE PREMIUM) -->
+  <section class="lifestyle-mosaic">
+    <div class="mosaic-grid">
+      <a href="tenis.html" class="mosaic-item">
+        <img src="banners/promo-3-desktop.jpg" alt="Tênis Adidas Campus">
+        <div class="mosaic-overlay">
+          <div class="m-sub">ESTILO URBANO</div>
+          <div class="m-tit">OS MELHORES TÊNIS</div>
+          <span class="m-cta">Comprar</span>
+        </div>
+      </a>
+      <a href="camisas.html" class="mosaic-item">
+        <img src="banners/hero-1-desktop.jpg" alt="Clubes Europeus">
+        <div class="mosaic-overlay">
+          <div class="m-sub">EM CAMPO</div>
+          <div class="m-tit">CLUBES EUROPEUS</div>
+          <span class="m-cta">Explorar</span>
+        </div>
+      </a>
+      <a href="copa2026.html" class="mosaic-item">
+        <img src="banners/hero-1-desktop.jpg" alt="Copa 2026">
+        <div class="mosaic-overlay">
+          <div class="m-sub">RUMO AO HEXA</div>
+          <div class="m-tit">COPA DO MUNDO 2026</div>
+          <span class="m-cta">Ver Agora</span>
+        </div>
+      </a>
+      <a href="roupas-verao.html" class="mosaic-item">
+        <img src="banners/hero-2-desktop.jpg" alt="Roupas de Verão">
+
+        <div class="mosaic-overlay">
+          <div class="m-sub">PARA O DIA A DIA</div>
+          <div class="m-tit">ROUPAS DE VERÃO</div>
+          <span class="m-cta">Descobrir</span>
+        </div>
+      </a>
     </div>
-    <div class="slider-dots" id="sliderDots"></div>
-  </div>
-  <!-- 2. Primeira Seção de Produtos -->
+  </section>
+
+
+
+  <!-- 2. SEÇÃO LANÇAMENTOS (IMEDIATAMENTE APÓS O GRID) -->
   <div class="filter-section">
-    <div class="section-title">LANÇAMENTOS<span>IMPERDÍVEIS</span></div>
+    <div class="section-title">LANÇAMENTOS <span>IMPERDÍVEIS</span></div>
   </div>
+
   <div class="products-section">
     <div class="grid" id="grid-drop-exclusivo"></div>
   </div>
-  <!-- 3. Banner Intercalado A -->
-  <a href="tenis.html" class="promo-banner">
-    <picture>
-      <source media="(max-width: 768px)" srcset="banners/promo-3-mobile.jpg">
-      <img src="banners/promo-3-desktop.jpg" alt="Banner Adidas Campus" loading="lazy">
-    </picture>
-  </a>
-  <!-- 4. Segunda Seção de Produtos -->
+
+  <!-- 3. SEÇÃO ENCONTRE O SEU TIME (ESTILO ADIDAS) -->
+  <section class="team-finder-section">
+    <div class="section-header-wrap">
+      <h2 class="finder-title">ENCONTRE SEU <span>NOVO MANTO</span></h2>
+
+
+      <div class="finder-filters">
+        <button class="fp active" onclick="filterTeamSlider('todos', this)">TODOS</button>
+        <button class="fp" onclick="filterTeamSlider('europeus', this)">EUROPEUS</button>
+        <button class="fp" onclick="filterTeamSlider('brasileiros', this)">BRASILEIROS</button>
+        <button class="fp" onclick="filterTeamSlider('selecoes', this)">SELEÇÕES</button>
+      </div>
+    </div>
+    
+    <div class="slider-wrapper">
+      <button class="s-arrow s-prev" onclick="scrollTeamSlider(-1)">‹</button>
+      <div class="team-slider" id="homeTeamSlider">
+        <!-- Injetado via JS -->
+      </div>
+      <button class="s-arrow s-next" onclick="scrollTeamSlider(1)">›</button>
+    </div>
+  </section>
+
+  <!-- 4. SEÇÃO MAIS PROCURADOS -->
   <div class="filter-section">
     <div class="section-title">MAIS <span>PROCURADOS</span></div>
   </div>
+
+
   <div class="products-section">
     <div class="grid" id="grid-mais-vistos"></div>
   </div>
-  <!-- 5. Banner Intercalado B -->
-  <a href="tenis.html" class="promo-banner">
-    <picture>
-      <source media="(max-width: 768px)" srcset="banners/hero-3-mobile.jpg">
-      <img src="banners/hero-3-desktop.jpg" alt="Banner New Balance 530" loading="lazy">
-    </picture>
-  </a>
+
   <div class="overlay" id="overlay">
     <div class="modal">
       <button class="mcls">✕</button>
@@ -159,8 +219,9 @@
   <script src="loja.js"></script>
   <script src="animacoes.js"></script>
   <!-- Botão WhatsApp Flutuante -->
-  <a class="wpp-float" href="https://wa.me/5531992082542" target="_blank" rel="noopener noreferrer"
+  <a class="wpp-float" href="https://wa.me/5531992082542?text=Olá!%20Estou%20no%20site%20da%20Sport%20Closet%20e%20gostaria%20de%20atendimento." target="_blank" rel="noopener noreferrer"
     aria-label="Falar no WhatsApp">
+
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.535 5.858L.057 23.633a.5.5 0 0 0 .61.61l5.775-1.478A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.944 9.944 0 0 1-5.088-1.392l-.363-.216-3.763.963.982-3.637-.237-.376A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
   </a>
 </body>

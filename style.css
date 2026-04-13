@@ -7,11 +7,12 @@
   --gray2: #1e1e1e;
   --gray3: #2a2a2a;
   --muted: #666;
-  --radius: 2px;
+  --radius: 8px; /* Padronização Sport Closet */
   --font-d: 'Bebas Neue', sans-serif;
   --font-b: 'DM Sans', sans-serif;
-  --transition: .2s ease;
+  --transition: .25s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
+
 
 .promo-banner {
   display: block;
@@ -140,8 +141,9 @@ nav {
   font-family: var(--font-b);
   font-size: 12px;
   padding: 10px 18px;
-  border-radius: 20px;
+  border-radius: var(--radius);
   outline: none;
+
   transition: border-color var(--transition);
 }
 
@@ -236,8 +238,9 @@ nav {
   letter-spacing: .08em;
   padding: 5px 12px;
   border: 1px solid #2a2a2a;
-  border-radius: 20px;
+  border-radius: var(--radius);
   color: var(--muted);
+
   cursor: pointer;
   background: transparent;
   transition: all var(--transition);
@@ -332,14 +335,31 @@ nav {
 
 .slide-content {
   position: absolute;
-  bottom: 0px;
-  left: 0px;
-  padding: 0 5% 10% 5%;
-  pointer-events: none;
-  z-index: 5;
-  width: 100%;
+  left: 6%; /* Respiro lateral */
+  bottom: 12%; /* Respiro inferior */
+  z-index: 10;
+  width: auto; /* Deixa o conteúdo respirar */
+  max-width: 80%;
   box-sizing: border-box;
 }
+
+/* Slide com conteúdo na direita */
+.slide.slide-right::after {
+  background: linear-gradient(-90deg, rgba(8, 8, 8, 0.85) 0%, rgba(8, 8, 8, 0.4) 40%, transparent 100%);
+}
+
+.slide.slide-right .slide-content {
+  left: auto;
+  right: 6%;
+  text-align: right;
+}
+
+.slide.slide-right .slide-btn {
+  margin-left: auto;
+}
+
+
+
 
 .slide-subtitle {
   font-size: 11px;
@@ -372,13 +392,18 @@ nav {
   animation: slideContentUp 0.6s ease forwards 0.5s;
 }
 
+
+
 .slide-btn {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(8px);
   color: var(--white);
   border: 1.5px solid var(--white);
   padding: 12px 32px;
+  border-radius: var(--radius); /* Padronização Sport Closet */
   font-family: var(--font-b);
+
+
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -491,25 +516,30 @@ nav {
 
 /* ─── FILTERS ───────────────────────────────────────────────────────────────── */
 .filter-section {
-  padding: 36px 28px 16px;
+  padding: 36px 5% 16px; /* Alinhado ao texto do Hero (5%) */
 }
 
+
 .section-title {
-  font-family: var(--font-d);
+  font-family: var(--font-d); /* Bebas Neue */
   font-size: 44px;
-  letter-spacing: .04em;
+  font-weight: normal; /* Suave igual ao Hero */
+  letter-spacing: .02em;
   margin-bottom: 20px;
 }
+
 
 .section-title span {
   color: var(--accent);
 }
 
-.filters {
+.filters, .filter-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 12px; /* Unificado para evitar visual colado */
 }
+
+
 
 .fg-label {
   font-size: 9px;
@@ -519,37 +549,45 @@ nav {
   width: 100%;
   margin-bottom: 2px;
   margin-top: 12px;
+  opacity: 0.8; /* Suavizar um pouco o label */
 }
 
-.fb {
-  padding: 6px 14px;
-  border: 1px solid #222;
+
+.fb, .fp {
+  padding: 8px 18px;
+  border: 1px solid var(--accent); /* Contorno laranja solicitado */
   background: transparent;
-  color: var(--muted);
+  color: var(--white);
   font-family: var(--font-b);
   font-size: 11px;
   letter-spacing: .07em;
   cursor: pointer;
   transition: all .18s;
   text-transform: uppercase;
+  border-radius: var(--radius); /* Raio 8px solicitado */
 }
 
-.fb:hover {
-  border-color: #444;
-  color: var(--white);
+
+
+.fb:hover, .fp:hover {
+  background: rgba(255, 107, 0, 0.1);
+  border-color: var(--accent);
 }
 
-.fb.active {
+.fb.active, .fp.active {
   background: var(--accent);
   border-color: var(--accent);
-  color: #000;
+  color: #fff;
   font-weight: 700;
 }
 
+
+
 /* ─── PRODUCT GRID ──────────────────────────────────────────────────────────── */
 .products-section {
-  padding: 12px 28px 80px;
+  padding: 12px 5% 80px; /* Alinhado ao texto do Hero (5%) */
 }
+
 
 .ph {
   display: flex;
@@ -566,44 +604,58 @@ nav {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 2px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Minmax equilibrado */
+  gap: 24px;
+  row-gap: 48px;
+  justify-content: center;
 }
+
 
 .card {
-  background: var(--gray);
-  cursor: pointer;
-  position: relative;
+  background: var(--gray1);
+  border: none; /* Removido conforme solicitação do cliente */
+  border-radius: var(--radius); /* Raio 8px mantido */
   overflow: hidden;
+  transition: all .4s cubic-bezier(0.165, 0.84, 0.44, 1);
   display: flex;
   flex-direction: column;
-  height: 100%;
-  transition: transform .25s ease, box-shadow .25s ease;
+  position: relative;
+  cursor: pointer;
+  max-width: 310px; /* Limite para não estourar em telas largas */
+  margin: 0 auto;
 }
 
+
+
+
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, .5);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(255, 107, 0, 0.2);
 }
 
 .card-img {
-  aspect-ratio: 3/4;
+  aspect-ratio: 1/1; /* Quadrado para mais estabilidade */
   overflow: hidden;
-  background: var(--gray2);
+  background: #fff; /* Fundo branco padronizado */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
 }
 
+
 .card-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Garante que a foto inteira apareça sem cortes */
   transition: transform .5s ease;
   display: block;
 }
 
 .card:hover .card-img img {
-  transform: scale(1.06);
+  transform: scale(1.08); /* Efeito de zoom elegante */
 }
+
 
 .card-badge {
   position: absolute;
@@ -619,11 +671,12 @@ nav {
 }
 
 .card-info {
-  padding: 14px;
+  padding: 14px 14px 0 14px;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
+
 
 .card-brand {
   font-size: 10px;
@@ -650,16 +703,57 @@ nav {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 12px;
   margin-top: auto;
+  margin-left: -14px;
+  margin-right: -14px;
 }
 
+
 .card-price {
-  align-self: flex-start;
-  font-size: 15px;
-  font-weight: 500;
-  white-space: nowrap;
+  padding: 0 14px;
+  font-family: var(--font-d);
+  font-size: 19px;
+  letter-spacing: .02em;
+  margin-bottom: 12px;
 }
+
+
+.grid-wpp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #25D366;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius); /* Padronizado 8px */
+  padding: 12px;
+  margin: 10px 14px 15px 14px; /* Ajustado para alinhar com o padding interno */
+  font-family: var(--font-b);
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  width: auto; /* Deixa as margens controlarem a largura sem cortar */
+}
+
+
+
+
+
+
+.grid-wpp-btn:hover {
+  background: #1eb956;
+}
+
+.grid-wpp-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+  fill: currentColor;
+}
+
 
 .wpp-btn {
   display: flex;
@@ -915,7 +1009,9 @@ nav {
   cursor: pointer;
   transition: all .18s;
   text-align: center;
+  border-radius: var(--radius); /* Padronizado 8px */
 }
+
 
 .sz:hover {
   border-color: var(--accent);
@@ -948,12 +1044,14 @@ nav {
   font-weight: 700;
   letter-spacing: .1em;
   padding: 15px;
+  border-radius: var(--radius);
   cursor: pointer;
   transition: background .18s;
   text-transform: uppercase;
   width: 100%;
   margin-top: auto;
 }
+
 
 .m-wpp:hover {
   background: #1db954;
@@ -1058,7 +1156,7 @@ footer a:hover {
   width: 56px;
   height: 56px;
   background: #25D366;
-  border-radius: 50%;
+  border-radius: 50%; /* Mantém redondo o flutuante */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1068,6 +1166,7 @@ footer a:hover {
   transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
   animation: wppPulse 3s ease-in-out infinite;
 }
+
 
 .wpp-float:hover {
   background: #1db954;
@@ -1092,7 +1191,237 @@ footer a:hover {
 }
 
 /* ─── RESPONSIVE ────────────────────────────────────────────────────────────── */
+/* ─── LIFESTYLE MOSAIC (NIKE STYLE) ────────────────────────────────────────── */
+.lifestyle-mosaic {
+  padding: 40px 5%; /* Alinhado ao texto do Hero (5%) */
+}
+
+
+.mosaic-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 450px);
+  gap: 0; /* Totalmente colados conforme solicitado */
+}
+
+
+
+.mosaic-item {
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.mosaic-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+.mosaic-item:hover img {
+  transform: scale(1.03);
+}
+
+.mosaic-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 60%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 48px; /* Aumentado de 32px para maior distanciamento interno */
+  color: #fff;
+  transition: opacity 0.3s;
+}
+
+
+
+.m-sub {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  color: var(--accent); /* Badge em Laranja */
+}
+
+.m-tit {
+  font-family: var(--font-d);
+  font-size: 32px;
+  font-weight: normal; /* Removido o 800 para combinar com o Hero */
+  margin-bottom: 16px;
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: #fff; 
+}
+
+
+
+
+.m-cta {
+  display: inline-block;
+  align-self: flex-start;
+  background: var(--accent);
+  color: #fff; /* Trocado preto por branco para melhor contraste */
+  padding: 10px 24px;
+  border-radius: 12px; /* Padronização 12px */
+  font-size: 13px;
+
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: opacity 0.2s;
+}
+
+
+
+
+.mosaic-item:hover .m-cta {
+  opacity: 0.8;
+}
+
+/* ─── TEAM FINDER (ADIDAS STYLE) ────────────────────────────────────────────── */
+.team-finder-section {
+  padding: 60px 5%; /* Alinhado ao 5% global */
+  background: var(--black);
+  color: var(--white);
+}
+
+
+.section-header-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Padronização dos Títulos de Seção */
+.section-title, .finder-title {
+  font-family: var(--font-d);
+  font-size: 36px;
+  font-weight: normal; /* Peso suavizado igual ao Hero */
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+
+.section-title span, .finder-title span {
+  color: var(--accent);
+  margin-left: 8px;
+}
+
+
+.finder-filters {
+  display: flex;
+  gap: 12px;
+}
+
+.fp {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--white);
+  padding: 8px 18px; /* Padronizado com .fb */
+  font-family: var(--font-b);
+  font-size: 11px; /* Padronizado com .fb */
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 12px; /* Padronização 12px */
+  text-transform: uppercase;
+  letter-spacing: 0.07em; /* Padronizado com .fb */
+}
+
+
+.fp:hover {
+  border-color: var(--white);
+}
+
+.fp.active {
+  background: var(--accent);
+  color: #fff; /* Texto branco no botão laranja ativo */
+  border-color: var(--accent);
+}
+
+
+
+
+.slider-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.team-slider {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 20px 0;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.team-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.team-slider .card {
+  flex: 0 0 280px;
+  background: var(--gray); /* Mantendo o card dark */
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.s-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  background: var(--white);
+  color: var(--black);
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  transition: opacity 0.2s;
+}
+
+.s-arrow:hover {
+  opacity: 0.9;
+}
+
+.s-prev { left: -22px; }
+.s-next { right: -22px; }
+
+@media (max-width: 1024px) {
+  .mosaic-grid {
+    grid-template-rows: repeat(2, 400px);
+  }
+}
+
 @media (max-width: 768px) {
+  .mosaic-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 380px);
+    padding: 0;
+  }
+  .mosaic-item { height: 380px; }
+  .s-arrow { display: none; }
+  .section-header-wrap { flex-direction: column; align-items: flex-start; }
+  .finder-title { font-size: 24px; }
+}
+
+@media (max-width: 768px) {
+
+
   nav {
     height: 72px;
     padding: 0 16px;

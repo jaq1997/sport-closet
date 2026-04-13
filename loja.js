@@ -1,7 +1,7 @@
 
 /* ─── CONFIGURAÇÕES ─────────────────────────────────────────────────────── */
 const WPP = '5531992082542';
-const BASE_URL_FOTOS = 'https://pub-9eb15062e53d4ad1a85362ac330e3002.r2.dev/';
+const BASE_URL_FOTOS = 'https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/';
 
 /* ─── ESTADO DA APLICAÇÃO ────────────────────────────────────────────────── */
 const path = window.location.pathname.split("/").pop();
@@ -9,10 +9,11 @@ const pageName = (path === '' || path === 'index.html') ? 'index' : path.replace
 
 const pageTypeMap = {
     'copa2026': 'camisa de seleção',
-    'roupas-verao': ['camiseta', 'shorts', 'regata', 'casaco', 'legging'],
+    'roupas-verao': ['camiseta', 'shorts', 'regata', 'casaco', 'legging', 'roupa - verão', 'roupa - verao'],
     'camisas': 'camisa de time',
     'tenis': 'tênis'
 };
+
 const pageType = pageTypeMap[pageName] || 'todos';
 
 let activeFilters = {
@@ -33,10 +34,11 @@ const i18n = {
     empty: "Nenhum produto encontrado.",
     found: "produtos encontrados",
     slides: [
-      { sub: "COPA 2026", title: "CAMISAS DE<br>SELEÇÃO", btn: "VEJA AGORA" },
-      { sub: "PISANDO COM ESTILO", title: "OS MELHORES<br>TÊNIS", btn: "EXPLORE" },
+      { sub: "PISANDO COM ESTILO", title: "NEW BALANCE<br>530 SERIES", btn: "EXPLORE AGORA" },
+      { sub: "RUMO AO HEXA", title: "CAMISAS DE<br>SELEÇÃO", btn: "VER COLEÇÃO" },
       { sub: "PARA O DIA A DIA", title: "ROUPAS DE<br>VERÃO", btn: "CONFERIR" }
     ],
+
     labels: {
       searchPlaceholder: "Pesquisar produtos (nome, marca, tipo)...",
       filterBrand: "Filtrar por Marca:",
@@ -51,12 +53,21 @@ const i18n = {
         'roupas-verao': "Roupas de Verão"
       },
       section: {
-        index: ["LANÇAMENTOS IMPERDÍVEIS", "MAIS PROCURADOS"],
-        copa2026: "COPA 2026",
-        camisas: "CAMISAS DE TIME",
-        tenis: "TÊNIS",
-        'roupas-verao': "ROUPAS DE VERÃO"
+        index: [
+          "LANÇAMENTOS <span>IMPERDÍVEIS</span>", 
+          "MAIS <span>PROCURADOS</span>"
+        ],
+        finder: "ENCONTRE SEU <span>NOVO MANTO</span>",
+        copa2026: "COPA <span>2026</span>",
+
+
+        camisas: "CAMISAS DE <span>TIME</span>",
+        tenis: "OS MELHORES <span>TÊNIS</span>",
+        'roupas-verao': "ROUPAS DE <span>VERÃO</span>"
+
+
       },
+
       heroSubtitle: {
         copa2026: "COPA 2026",
         camisas: "CATEGORIA",
@@ -64,11 +75,13 @@ const i18n = {
         'roupas-verao': "PARA O DIA A DIA"
       },
       heroTitle: {
-        copa2026: "COPA 2026",
-        camisas: "CAMISAS DE TIME",
-        tenis: "OS MELHORES<br>TÊNIS",
-        'roupas-verao': "ROUPAS DE VERÃO"
+        copa2026: "COPA <span>2026</span>",
+        camisas: "CAMISAS<br>DE <span>TIME</span>",
+        tenis: "OS MELHORES<br><span>TÊNIS</span>",
+
+        'roupas-verao': "ROUPAS DE <span>VERÃO</span>"
       },
+
       modalSizeLabel: "Tamanho",
       footer: "© 2026 Sport Closet — Todos os direitos reservados",
       whatsappAria: "Falar no WhatsApp",
@@ -84,10 +97,11 @@ const i18n = {
     empty: "No products found.",
     found: "products found",
     slides: [
-      { sub: "WORLD CUP 2026", title: "NATIONAL TEAM<br>JERSEYS", btn: "SHOP NOW" },
-      { sub: "STYLE ON YOUR FEET", title: "THE BEST<br>SNEAKERS", btn: "EXPLORE" },
+      { sub: "STYLE ON YOUR FEET", title: "NEW BALANCE<br>530 SERIES", btn: "EXPLORE NOW" },
+      { sub: "NATIONAL TEAMS", title: "SELECTION<br>JERSEYS", btn: "SEE COLLECTION" },
       { sub: "FOR YOUR DAILY", title: "SUMMER<br>WEAR", btn: "DISCOVER" }
     ],
+
     labels: {
       searchPlaceholder: "Search products (name, brand, type)...",
       filterBrand: "Filter by Brand:",
@@ -108,18 +122,26 @@ const i18n = {
         'roupas-verao': "FOR YOUR DAILY"
       },
       heroTitle: {
-        copa2026: "WORLD CUP 2026",
-        camisas: "CLUB JERSEYS",
-        tenis: "THE BEST<br>SNEAKERS",
-        'roupas-verao': "SUMMER WEAR"
+        copa2026: "WORLD CUP <span>2026</span>",
+        camisas: "CLUB <span>JERSEYS</span>",
+        tenis: "THE BEST<br><span>SNEAKERS</span>",
+        'roupas-verao': "SUMMER <span>WEAR</span>"
       },
+
       section: {
-        index: ["NEW RELEASES", "MOST WANTED"],
-        copa2026: "WORLD CUP 2026",
-        camisas: "CLUB JERSEYS",
-        tenis: "SNEAKERS",
-        'roupas-verao': "SUMMER WEAR"
+        index: [
+          "NEW <span>RELEASES</span>", 
+          "MOST <span>WANTED</span>"
+        ],
+        finder: "FIND YOUR <span>NEW JERSEY</span>",
+        copa2026: "WORLD CUP <span>2026</span>",
+
+
+        camisas: "CLUB <span>JERSEYS</span>",
+        tenis: "THE BEST <span>SNEAKERS</span>",
+        'roupas-verao': "SUMMER <span>WEAR</span>"
       },
+
       modalSizeLabel: "Size",
       footer: "© 2026 Sport Closet — All rights reserved",
       whatsappAria: "Chat on WhatsApp",
@@ -163,10 +185,14 @@ function tStr(str) {
 function wppMsg(p, sz) {
   const lang = getLang();
   const sizeLabel = isUsa() ? 'Size' : 'Tamanho';
+  const priceLabel = isUsa() ? 'Price' : 'Preço';
   const sizePart = sz ? ` | ${sizeLabel}: ${sz}` : '';
+  const pricePart = ` | ${priceLabel}: ${formatPrice(p)}`;
+  
   const message = isUsa()
-    ? `Hello! I am interested in the product:\n\n*${p.nome}* (ID: ${p.id})${sizePart}\n\nI saw it on your website.`
-    : `Olá! Tenho interesse no produto:\n\n*${p.nome}* (ID: ${p.id})${sizePart}\n\nVi no seu site.`;
+    ? `Hello! I saw the product *${p.nome}* (${p.marca}) on Sport Closet and I'd like more information.${sizePart}${pricePart}`
+    : `Olá! Vi o produto *${p.nome}* (${p.marca}) na Sport Closet e gostaria de mais informações.${sizePart}${pricePart}`;
+
   return encodeURIComponent(message);
 }
 
@@ -261,27 +287,59 @@ function updateStaticTexts() {
 
   // Section/title texts
   if (pageName === 'index' && Array.isArray(lang.labels.section.index)) {
-    document.querySelectorAll('.section-title').forEach((el, idx) => {
-      if (lang.labels.section.index[idx]) {
-        el.textContent = lang.labels.section.index[idx];
+    const ft = document.querySelector('.finder-title');
+    if (ft && lang.labels.section.finder) {
+      if (ft.innerHTML !== lang.labels.section.finder) {
+        ft.innerHTML = lang.labels.section.finder;
       }
-    });
+    }
+    
+    // Títulos específicos da Home (Lançamentos / Mais Procurados)
+    if (pageName === 'index') {
+      document.querySelectorAll('.section-title').forEach((el, idx) => {
+        const target = lang.labels.section.index[idx];
+        if (target) {
+          const tNorm = target.replace(/\s+/g, ' ').trim().toLowerCase();
+          const cNorm = el.innerHTML.replace(/\s+/g, ' ').trim().toLowerCase();
+          if (tNorm !== cNorm) {
+            el.innerHTML = target;
+          }
+        }
+      });
+    }
+
+
+
+
+
   } else {
     const sectionTitle = document.querySelector('.section-title');
     if (sectionTitle && lang.labels.section[pageName]) {
-      sectionTitle.innerHTML = lang.labels.section[pageName];
+      const target = lang.labels.section[pageName];
+      const tNorm = target.replace(/\s+/g, ' ').trim().toLowerCase();
+      const cNorm = sectionTitle.innerHTML.replace(/\s+/g, ' ').trim().toLowerCase();
+      if (tNorm !== cNorm) {
+        sectionTitle.innerHTML = target;
+      }
     }
+
   }
+
 
   const heroSubtitle = document.querySelector('.slide-subtitle');
   if (heroSubtitle && lang.labels.heroSubtitle[pageName]) {
-    heroSubtitle.textContent = lang.labels.heroSubtitle[pageName];
+    if (heroSubtitle.textContent !== lang.labels.heroSubtitle[pageName]) {
+      heroSubtitle.textContent = lang.labels.heroSubtitle[pageName];
+    }
   }
 
   const heroTitle = document.querySelector('.slide-title');
   if (heroTitle && lang.labels.heroTitle[pageName]) {
-    heroTitle.innerHTML = lang.labels.heroTitle[pageName];
+    if (heroTitle.innerHTML !== lang.labels.heroTitle[pageName]) {
+      heroTitle.innerHTML = lang.labels.heroTitle[pageName];
+    }
   }
+
 
   document.querySelectorAll('.fb[data-v="todos"]').forEach(btn => {
     btn.textContent = lang.labels.all;
@@ -416,14 +474,22 @@ function desenharCards(containerId, lista) {
         <img src="${fotoUrl}" alt="${p.nome}" loading="lazy" onerror="this.src='https://placehold.co/400x500?text=Foto+Indisponível'">
         ${p.badge ? `<div class="card-badge">${p.badge}</div>` : ''}
       </div>
+
       <div class="card-info">
         <div class="card-brand">${p.marca.toUpperCase()}</div>
         <div class="card-name">${p.nome}</div>
         <div class="card-footer">
           <div class="card-price">${formatPrice(p)}</div>
+          <button class="grid-wpp-btn" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#25D366; color:white; border:none; width:100%; padding:12px; font-size:11px; font-weight:800; cursor:pointer;" onclick="event.stopPropagation(); window.open('https://wa.me/${WPP}?text=${wppMsg(p)}', '_blank')">
+            <span style="display:flex; width:16px; height:16px;">${wppSvg.replace('<svg ', '<svg style="width:16px;height:16px;fill:currentColor;" ')}</span>
+            ${isUsa() ? 'ORDER ON WHATSAPP' : 'COMPRAR NO WHATSAPP'}
+          </button>
+
+
         </div>
       </div>
     </div>`;
+
   }).join('');
 }
 
@@ -523,6 +589,8 @@ function updateChevrons() {
 /* ─── INICIALIZAÇÃO ──────────────────────────────────────────────────────── */
 function init() {
     renderGrid();
+    if (pageName === 'index') renderTeamSlider('todos');
+    
     const inputs = document.querySelectorAll('.nav-search-input');
     inputs.forEach(input => {
         input.addEventListener('input', () => {
@@ -545,12 +613,11 @@ function init() {
         btn.textContent = '🇧🇷 Brasil (R$)'
     }
     updateStaticTexts();
-    renderGrid();
 }
+
 
 /* ─── CARREGAMENTO DOS DADOS DO CSV LOCAL ──────────────────────────────── */
 const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTJJsi5MlreQayUKZtiZIwb0RcZCPa5ngJOkOmq-uCkKvtxVD8oRvYIJuYosn-22qsXtCsZsHJHfjhs/pub?output=csv';
-const LOCAL_CSV_URL = 'Tabela_Sport_Closet_2026.csv';
 
 function bootStore() {
   const sc = document.createElement('script');
@@ -586,34 +653,11 @@ function bootStore() {
 }
 
 function loadFallbackCsv() {
-  fetch(LOCAL_CSV_URL)
-    .then(response => {
-      if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.text();
-    })
-    .then(csvText => {
-      Papa.parse(csvText, {
-        header: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-          processCSVData(results.data);
-          init();
-        },
-        error: function(err) {
-          console.error("Erro ao parsear CSV local:", err);
-          window.produtos = [];
-          init();
-        }
-      });
-    }).catch(err => {
-      console.error("Erro ao carregar CSV local", err);
-      const grid = document.getElementById('grid');
-      if(grid) grid.innerHTML = '<div class="empty">Erro ao carregar produtos. Verifique o console.</div>';
-      window.produtos = [];
-      init();
-    });
+  console.error("Não foi possível carregar os produtos do Google Sheets e o CSV local foi removido.");
+  const grid = document.getElementById('grid');
+  if(grid) grid.innerHTML = '<div class="empty">Erro ao carregar produtos. Verifique o console.</div>';
+  window.produtos = [];
+  init();
 }
 
 function processCSVData(data) {
@@ -638,4 +682,47 @@ function processCSVData(data) {
   }).filter(p => p.nome);
 }
 
+/* ─── LOGICA DO SLIDER DE TIMES (HOME) ────────────────────────────────────── */
+function filterTeamSlider(val, btn) {
+  document.querySelectorAll('.fp').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTeamSlider(val);
+}
+
+function renderTeamSlider(filterKey) {
+  const source = window.produtos || [];
+  let filtered = source.filter(p => {
+    const pt = norm(p.tipo);
+    return (pt === norm('camisa de time') || pt === norm('camisa de seleção'));
+  });
+
+  if (filterKey === 'todos') {
+    filtered = embaralhar(filtered);
+  } else if (filterKey === 'europeus') {
+
+    // Exclui times Brasileiros e Seleções para mostrar apenas Clubes Europeus
+    filtered = filtered.filter(p => {
+      const liga = norm(p.liga);
+      const brTerms = ['brasil', 'brasileirao', 'brasileirão'];
+      const selecoesTerms = ['brasil', 'argentina', 'alemanha', 'italia', 'japao', 'belgica', 'portugal', 'frança', 'espanha'];
+      return !brTerms.includes(liga) && !selecoesTerms.includes(liga) && norm(p.tipo) === norm('camisa de time');
+    });
+  } else if (filterKey === 'brasileiros') {
+    filtered = filtered.filter(p => norm(p.liga) === norm('brasileirão') || norm(p.liga) === norm('brasileirao'));
+  } else if (filterKey === 'selecoes') {
+    filtered = filtered.filter(p => norm(p.tipo) === norm('camisa de seleção'));
+  }
+
+  desenharCards('homeTeamSlider', filtered);
+}
+
+
+function scrollTeamSlider(dir) {
+  const slider = document.getElementById('homeTeamSlider');
+  if (!slider) return;
+  const scrollAmount = 300;
+  slider.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
+}
+
 document.addEventListener('DOMContentLoaded', bootStore);
+

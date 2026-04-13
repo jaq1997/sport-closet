@@ -7,429 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-/* ── VARS (espelha o style.css da loja) ────────────────────── */
-:root {
-  --black:   #080808;
-  --white:   #f0eeeb;
-  --accent:  #FFA500;
-  --gray:    #131313;
-  --gray2:   #1e1e1e;
-  --gray3:   #2a2a2a;
-  --muted:   #666;
-  --danger:  #e03e3e;
-  --success: #25D366;
-  --radius:  2px;
-  --font-d:  'Bebas Neue', sans-serif;
-  --font-b:  'DM Sans', sans-serif;
-  --font-m:  'DM Mono', monospace;
-  --transition: .2s ease;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--black);
-  color: var(--white);
-  font-family: var(--font-b);
-  font-size: 14px;
-  overflow-x: hidden;
-  min-height: 100vh;
-}
-
-/* ── AUTH OVERLAY ───────────────────────────────────────────── */
-.auth-overlay {
-  position: fixed; inset: 0; z-index: 9999;
-  background: var(--black);
-  display: flex; align-items: center; justify-content: center;
-}
-.auth-box {
-  background: var(--gray);
-  border: 1px solid var(--gray3);
-  width: 380px;
-  padding: 48px 40px 40px;
-  text-align: center;
-}
-.auth-badge {
-  display: inline-block;
-  background: var(--accent);
-  color: #000;
-  font-family: var(--font-b);
-  font-weight: 700;
-  font-size: 10px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  padding: 4px 14px;
-  margin-bottom: 18px;
-}
-.auth-title {
-  font-family: var(--font-d);
-  font-size: 52px;
-  letter-spacing: .04em;
-  line-height: .9;
-  margin-bottom: 8px;
-}
-.auth-title span { color: var(--accent); }
-.auth-sub {
-  font-size: 12px;
-  color: var(--muted);
-  margin-bottom: 28px;
-}
-
-/* campo senha */
-.pass-wrap {
-  position: relative;
-  margin-bottom: 10px;
-}
-.pass-wrap input {
-  display: block;
-  width: 100%;
-  background: var(--gray2);
-  border: 1px solid var(--gray3);
-  color: var(--white);
-  font-family: var(--font-b);
-  font-size: 14px;
-  padding: 13px 48px 13px 16px;
-  outline: none;
-  transition: border-color var(--transition);
-  border-radius: 8px;
-}
-.pass-wrap input:focus { border-color: var(--accent); }
-.pass-wrap input::placeholder { color: var(--muted); }
-.pass-toggle {
-  position: absolute;
-  right: 0; top: 0; bottom: 0;
-  width: 44px;
-  background: none; border: none;
-  color: var(--muted); cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: color var(--transition);
-}
-.pass-toggle:hover { color: var(--white); }
-
-.auth-btn {
-  display: block;
-  width: 100%;
-  padding: 13px;
-  background: var(--accent);
-  color: #000;
-  border: none;
-  font-family: var(--font-b);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background var(--transition), transform .1s;
-  margin-top: 4px;
-}
-.auth-btn:hover  { background: #e69500; }
-.auth-btn:active { transform: scale(.98); }
-.auth-error {
-  color: var(--danger);
-  font-size: 12px;
-  margin-top: 10px;
-  min-height: 16px;
-}
-
-/* ── LAYOUT ─────────────────────────────────────────────────── */
-.admin-layout { display: flex; min-height: 100vh; }
-
-/* ── SIDEBAR ────────────────────────────────────────────────── */
-.sidebar {
-  width: 210px; flex-shrink: 0;
-  background: var(--gray);
-  border-right: 1px solid #1a1a1a;
-  display: flex; flex-direction: column;
-  position: sticky; top: 0; height: 100vh;
-  overflow-y: auto;
-}
-.sidebar-header {
-  padding: 24px 20px 20px;
-  border-bottom: 1px solid #1a1a1a;
-}
-.sidebar-badge {
-  display: inline-block;
-  background: var(--accent);
-  color: #000;
-  font-size: 9px; font-weight: 700;
-  letter-spacing: .18em; text-transform: uppercase;
-  padding: 2px 10px;
-  margin-bottom: 8px;
-}
-.sidebar-title {
-  font-family: var(--font-d);
-  font-size: 28px; line-height: .9;
-  letter-spacing: .04em;
-}
-.sidebar-title span { color: var(--accent); }
-
-.nav-section { padding: 16px 0 4px; }
-.nav-label {
-  padding: 0 20px 6px;
-  font-size: 9px; font-weight: 700;
-  letter-spacing: .16em; text-transform: uppercase;
-  color: #333;
-}
-.nav-btn {
-  display: flex; align-items: center; gap: 10px;
-  width: 100%; padding: 10px 20px;
-  background: none; border: none; border-left: 2px solid transparent;
-  color: var(--muted);
-  font-family: var(--font-b); font-size: 13px; font-weight: 500;
-  cursor: pointer; text-align: left;
-  transition: color var(--transition), background var(--transition), border-color var(--transition);
-}
-.nav-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
-.nav-btn:hover { color: var(--white); background: var(--gray2); }
-.nav-btn.active { color: var(--accent); border-left-color: var(--accent); background: rgba(255,165,0,.07); }
-
-.sidebar-footer {
-  margin-top: auto;
-  padding: 16px 20px;
-  border-top: 1px solid #1a1a1a;
-}
-.stat-box {
-  background: var(--gray2); border: 1px solid #1a1a1a;
-  padding: 10px 14px;
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: 12px; color: var(--muted);
-}
-.stat-val {
-  font-family: var(--font-d); font-size: 26px;
-  color: var(--accent); line-height: 1;
-}
-
-/* ── MAIN ───────────────────────────────────────────────────── */
-.main-content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-
-.top-bar {
-  background: var(--gray);
-  border-bottom: 1px solid #1a1a1a;
-  padding: 0 24px; height: 56px;
-  display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
-}
-.top-bar-title { font-family: var(--font-d); font-size: 22px; letter-spacing: .06em; }
-.top-bar-actions { display: flex; gap: 8px; align-items: center; }
-
-/* ── BUTTONS ────────────────────────────────────────────────── */
-.btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 8px 14px;
-  border: 1px solid var(--gray3);
-  background: var(--gray2); color: var(--white);
-  font-family: var(--font-b); font-size: 12px; font-weight: 500;
-  letter-spacing: .05em;
-  cursor: pointer; white-space: nowrap;
-  transition: border-color var(--transition), background var(--transition), transform .1s;
-  border-radius: var(--radius);
-}
-.btn svg { width: 13px; height: 13px; flex-shrink: 0; }
-.btn:hover { border-color: #444; background: var(--gray3); }
-.btn:active { transform: scale(.97); }
-.btn-primary { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
-.btn-primary:hover { background: #e69500; border-color: #e69500; }
-.btn-danger { color: var(--danger); border-color: rgba(224,62,62,.3); }
-.btn-danger:hover { background: rgba(224,62,62,.1); border-color: var(--danger); }
-.btn-sm { padding: 5px 10px; font-size: 11px; }
-
-/* ── TABS ───────────────────────────────────────────────────── */
-.tab-bar {
-  display: flex; background: var(--gray);
-  border-bottom: 1px solid #1a1a1a; padding: 0 24px;
-}
-.tab-btn {
-  padding: 13px 16px;
-  background: none; border: none; border-bottom: 2px solid transparent;
-  color: var(--muted);
-  font-family: var(--font-b); font-size: 12px; font-weight: 600;
-  letter-spacing: .08em; text-transform: uppercase;
-  cursor: pointer;
-  transition: color var(--transition), border-color var(--transition);
-  margin-bottom: -1px;
-}
-.tab-btn:hover:not(.active) { color: var(--white); }
-.tab-btn.active { color: var(--white); border-bottom-color: var(--accent); }
-
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
-
-/* ── PANEL ──────────────────────────────────────────────────── */
-.panel { padding: 22px 24px; }
-.panel-card {
-  background: var(--gray); border: 1px solid #1a1a1a;
-  padding: 20px; margin-bottom: 20px;
-}
-.panel-card-title {
-  font-size: 9px; font-weight: 700;
-  letter-spacing: .18em; text-transform: uppercase; color: var(--muted);
-  margin-bottom: 16px;
-  display: flex; align-items: center; gap: 10px;
-}
-.panel-card-title::after { content: ''; flex: 1; height: 1px; background: #1a1a1a; }
-.panel-card-title svg { width: 13px; height: 13px; color: var(--accent); flex-shrink: 0; }
-
-/* ── FILTER BAR ─────────────────────────────────────────────── */
-.filter-bar {
-  display: flex; flex-wrap: wrap; gap: 8px;
-  align-items: center; margin-bottom: 16px;
-}
-.search-wrap { position: relative; flex: 1; min-width: 200px; }
-.search-wrap svg {
-  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-  width: 13px; height: 13px; color: var(--muted); pointer-events: none;
-}
-.search-wrap input {
-  width: 100%; padding: 9px 12px 9px 34px;
-  background: var(--gray2); border: 1px solid var(--gray3);
-  color: var(--white); font-family: var(--font-b); font-size: 12px;
-  outline: none; border-radius: 20px;
-  transition: border-color var(--transition);
-}
-.search-wrap input:focus { border-color: var(--accent); }
-.search-wrap input::placeholder { color: var(--muted); }
-.filter-select {
-  padding: 9px 12px;
-  background: var(--gray2); border: 1px solid var(--gray3);
-  color: var(--white); font-family: var(--font-b); font-size: 12px;
-  outline: none; cursor: pointer;
-  transition: border-color var(--transition);
-  border-radius: var(--radius);
-}
-.filter-select:focus { border-color: var(--accent); }
-.filtered-count { font-family: var(--font-m); font-size: 11px; color: var(--muted); white-space: nowrap; }
-
-/* ── TABLE ──────────────────────────────────────────────────── */
-.table-wrap { overflow-x: auto; border: 1px solid #1a1a1a; }
-table.prod-table { width: 100%; border-collapse: collapse; min-width: 1400px; }
-table.prod-table thead { position: sticky; top: 0; z-index: 10; }
-table.prod-table th {
-  background: var(--gray2);
-  padding: 9px 10px; border-bottom: 1px solid #1a1a1a;
-  text-align: left;
-  font-family: var(--font-m); font-size: 10px;
-  font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
-  color: var(--muted); white-space: nowrap;
-}
-table.prod-table td { padding: 7px 8px; border-bottom: 1px solid #111; vertical-align: top; }
-table.prod-table tr:last-child td { border-bottom: none; }
-table.prod-table tr:hover td { background: rgba(255,255,255,.02); }
-
-table.prod-table td input,
-table.prod-table td textarea {
-  width: 100%; background: transparent;
-  border: 1px solid transparent; color: var(--white);
-  font-family: var(--font-b); font-size: 13px;
-  padding: 5px 7px; outline: none;
-  transition: border-color var(--transition), background var(--transition);
-  resize: vertical; border-radius: var(--radius);
-}
-table.prod-table td input:hover,
-table.prod-table td textarea:hover { border-color: var(--gray3); background: var(--gray2); }
-table.prod-table td input:focus,
-table.prod-table td textarea:focus { border-color: var(--accent); background: var(--gray2); }
-
-.row-num { font-family: var(--font-m); font-size: 11px; color: #333; text-align: center; padding: 0 6px; }
-.img-cell { min-width: 140px; }
-.img-preview {
-  display: block; max-width: 80px; max-height: 80px;
-  object-fit: contain; border: 1px solid #1a1a1a;
-  background: var(--gray2); margin-top: 6px;
-}
-.badge-chip {
-  display: inline-block; background: var(--accent); color: #000;
-  font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-  padding: 2px 8px; margin-top: 4px;
-}
-
-/* ── UPLOAD ─────────────────────────────────────────────────── */
-.upload-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;
-}
-.upload-grid input,
-.upload-grid select {
-  width: 100%; padding: 9px 12px;
-  background: var(--gray2); border: 1px solid var(--gray3);
-  color: var(--white); font-family: var(--font-b); font-size: 13px;
-  outline: none; transition: border-color var(--transition);
-  border-radius: var(--radius);
-}
-.upload-grid input:focus, .upload-grid select:focus { border-color: var(--accent); }
-.upload-grid input::placeholder { color: var(--muted); }
-.upload-grid input[type=file] { color: var(--muted); }
-.upload-grid input[type=file]::file-selector-button {
-  padding: 3px 10px; background: var(--gray3); border: 1px solid #333;
-  color: var(--white); cursor: pointer; font-size: 12px; margin-right: 8px;
-}
-.upload-pass { position: relative; }
-.upload-pass input { padding-right: 44px !important; }
-.upload-pass .pass-toggle { position: absolute; right: 0; top: 0; bottom: 0; width: 40px; }
-
-.upload-status {
-  padding: 10px 14px; background: var(--gray2); border: 1px solid #1a1a1a;
-  font-size: 12px; color: var(--muted); margin-top: 12px;
-  border-radius: var(--radius);
-}
-.upload-status.ok  { color: var(--success); border-color: rgba(37,211,102,.25); background: rgba(37,211,102,.06); }
-.upload-status.err { color: var(--danger);  border-color: rgba(224,62,62,.25);  background: rgba(224,62,62,.06); }
-
-/* ── CSV OUTPUT ─────────────────────────────────────────────── */
-.csv-output {
-  width: 100%; min-height: 160px;
-  background: var(--gray2); border: 1px solid #1a1a1a; color: var(--muted);
-  font-family: var(--font-m); font-size: 12px; padding: 14px; resize: vertical; outline: none;
-  border-radius: var(--radius);
-}
-.csv-output:focus { border-color: var(--accent); }
-
-/* ── TOAST ──────────────────────────────────────────────────── */
-#toast {
-  position: fixed; bottom: 24px; right: 24px; z-index: 99999;
-  background: var(--gray); border: 1px solid #1a1a1a;
-  padding: 12px 18px; font-size: 13px; font-weight: 500;
-  box-shadow: 0 8px 32px rgba(0,0,0,.5);
-  transform: translateY(60px); opacity: 0;
-  transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
-  pointer-events: none; max-width: 300px;
-  border-radius: var(--radius);
-}
-#toast.show { transform: translateY(0); opacity: 1; }
-#toast.success { border-left: 3px solid var(--accent); }
-#toast.error   { border-left: 3px solid var(--danger); }
-
-/* ── CONFIRM DIALOG ─────────────────────────────────────────── */
-.confirm-dialog {
-  position: fixed; inset: 0; z-index: 9998;
-  background: rgba(0,0,0,.75);
-  display: none; align-items: center; justify-content: center;
-  backdrop-filter: blur(4px);
-}
-.confirm-dialog.open { display: flex; }
-.confirm-box {
-  background: var(--gray); border: 1px solid var(--gray3);
-  padding: 28px; width: 360px;
-  border-radius: var(--radius);
-}
-.confirm-box h3 { font-family: var(--font-d); font-size: 24px; letter-spacing: .04em; margin-bottom: 8px; }
-.confirm-box p  { color: var(--muted); font-size: 13px; margin-bottom: 22px; }
-.confirm-actions { display: flex; gap: 10px; justify-content: flex-end; }
-
-/* ── SCROLLBAR ──────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #222; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #333; }
-
-.hidden { display: none !important; }
-
-@media (max-width: 800px) {
-  .sidebar { display: none; }
-  .top-bar { padding: 0 16px; }
-  .panel   { padding: 16px; }
-}
-</style>
+<link rel="stylesheet" href="admin.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 </head>
 <body>
 
@@ -457,10 +36,102 @@ table.prod-table td textarea:focus { border-color: var(--accent); background: va
     <p id="confirmMsg">Tem certeza?</p>
     <div class="confirm-actions">
       <button class="btn" id="confirmCancel">Cancelar</button>
-      <button class="btn btn-danger" id="confirmOk">Excluir</button>
+      <button class="btn btn-danger" id="confirmOk">Confirmar</button>
     </div>
   </div>
 </div>
+
+  <!-- ── MODAL DE EDIÇÃO ────────────────────────────────────────── -->
+  <div class="edit-modal" id="productModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Editar Produto</h2>
+        <button class="btn-close-modal" id="btnCloseModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-sections">
+          
+          <!-- Imagens -->
+          <div class="modal-section">
+            <label class="section-label">Imagens (URLs ou nomes de arquivos no R2)</label>
+            <div class="img-edit-grid">
+              <div class="img-slot">
+                <img id="modalImg1Prev" src="" alt="">
+                <input type="text" id="modalImg1" placeholder="Imagem 1">
+              </div>
+              <div class="img-slot">
+                <img id="modalImg2Prev" src="" alt="">
+                <input type="text" id="modalImg2" placeholder="Imagem 2">
+              </div>
+              <div class="img-slot">
+                <img id="modalImg3Prev" src="" alt="">
+                <input type="text" id="modalImg3" placeholder="Imagem 3">
+              </div>
+            </div>
+          </div>
+
+          <!-- Informações Básicas -->
+          <div class="modal-section">
+            <div class="input-grid">
+              <div>
+                <label>Nome do Produto</label>
+                <input type="text" id="modalNome">
+              </div>
+              <div>
+                <label>ID / Cód</label>
+                <input type="text" id="modalId">
+              </div>
+              <div>
+                <label>Marca</label>
+                <input type="text" id="modalMarca">
+              </div>
+              <div>
+                <label>Tipo</label>
+                <input type="text" id="modalTipo">
+              </div>
+              <div>
+                <label>Liga / Competição</label>
+                <input type="text" id="modalLiga">
+              </div>
+              <div>
+                <label>Badge (Destaque)</label>
+                <input type="text" id="modalBadge">
+              </div>
+            </div>
+          </div>
+
+          <!-- Preços -->
+          <div class="modal-section">
+            <div class="price-grid">
+              <div>
+                <label>Preço BRL (R$)</label>
+                <input type="text" id="modalPrecoBrl">
+              </div>
+              <div>
+                <label>Preço USA ($)</label>
+                <input type="text" id="modalPrecoUsa">
+              </div>
+            </div>
+          </div>
+
+          <!-- Variações e Descrição -->
+          <div class="modal-section">
+            <label>Tamanhos / Médias (Separe por ponto e vírgula: P;M;G)</label>
+            <input type="text" id="modalTamanhos">
+          </div>
+          <div class="modal-section">
+            <label>Descrição Detalhada</label>
+            <textarea id="modalDescricao" rows="5"></textarea>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="btnCancelModal">Cancelar</button>
+        <button class="btn btn-primary" id="btnSaveModal">Salvar Alterações</button>
+      </div>
+    </div>
+  </div>
 
 <!-- TOAST -->
 <div id="toast"></div>
@@ -484,7 +155,7 @@ table.prod-table td textarea:focus { border-color: var(--accent); background: va
       </button>
       <button class="nav-btn" data-tab="exportar">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Exportar
+        Backup
       </button>
     </div>
     <div class="sidebar-footer">
@@ -496,17 +167,22 @@ table.prod-table td textarea:focus { border-color: var(--accent); background: va
   </aside>
 
   <div class="main-content">
+    <!-- TOP BAR -->
     <div class="top-bar">
       <div class="top-bar-title" id="topBarTitle">Produtos</div>
       <div class="top-bar-actions">
-        <input type="file" id="csvImport" accept=".csv" class="hidden">
-        <button class="btn" type="button" id="btnImport">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>
-          Importar CSV
+        <span class="save-status" id="saveStatus"></span>
+        <button class="btn" type="button" id="btnReload" title="Recarregar dados da planilha">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Recarregar
         </button>
         <button class="btn btn-primary" type="button" id="btnAdd">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Novo Produto
+        </button>
+        <button class="btn btn-sheets" type="button" id="btnSave">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Salvar no Sheets
         </button>
         <button class="btn" type="button" id="btnLogout" title="Sair">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -515,10 +191,11 @@ table.prod-table td textarea:focus { border-color: var(--accent); background: va
       </div>
     </div>
 
+    <!-- TABS -->
     <div class="tab-bar">
       <button class="tab-btn active" data-tab="produtos">Produtos</button>
       <button class="tab-btn" data-tab="upload">Upload R2</button>
-      <button class="tab-btn" data-tab="exportar">Exportar</button>
+      <button class="tab-btn" data-tab="exportar">Backup</button>
     </div>
 
     <!-- TAB PRODUTOS -->
@@ -591,341 +268,38 @@ table.prod-table td textarea:focus { border-color: var(--accent); background: va
       </div>
     </div>
 
-    <!-- TAB EXPORTAR -->
+    <!-- TAB BACKUP -->
     <div class="tab-panel panel" id="tab-exportar">
+      <div class="info-box">
+        <strong>Fonte de dados: Google Sheets</strong><br>
+        Os produtos são lidos e salvos diretamente na planilha via Apps Script.<br>
+        Use o backup abaixo apenas como <strong>cópia de segurança local</strong> — não é necessário para o funcionamento do site.
+      </div>
       <div class="panel-card">
         <div class="panel-card-title">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Ações de exportação
+          Backup local (JSON)
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-primary" type="button" id="btnExport">
+          <button class="btn btn-primary" type="button" id="btnExportJson">
             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Exportar CSV
-          </button>
-          <button class="btn" type="button" id="btnExportJson">
-            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Exportar JSON
+            Baixar backup JSON
           </button>
           <button class="btn" type="button" id="btnCopy">
             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            Copiar saída
+            Copiar JSON
           </button>
         </div>
       </div>
       <div class="panel-card">
-        <div class="panel-card-title">Prévia da saída</div>
-        <textarea id="csvOutput" class="csv-output" readonly placeholder="Clique em Exportar CSV ou Exportar JSON…"></textarea>
+        <div class="panel-card-title">Prévia do backup</div>
+        <textarea id="csvOutput" class="csv-output" readonly placeholder="Clique em Baixar backup JSON para ver o conteúdo aqui…"></textarea>
       </div>
     </div>
-  </div>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-<script>
-const BASE_URL_FOTOS = 'https://pub-9eb15062e53d4ad1a85362ac330e3002.r2.dev/';
-const CSV_URL        = 'Tabela_Sport_Closet_2026.csv';
-const ADMIN_PASSWORD = 'sportcloset123';
-const AUTH_KEY       = 'sport_closet_admin_authenticated';
+  </div><!-- /main-content -->
+</div><!-- /admin-layout -->
 
-let adminProducts   = [];
-let filteredIndices = [];
-
-const isAuth  = () => localStorage.getItem(AUTH_KEY) === '1';
-const setAuth = v  => localStorage.setItem(AUTH_KEY, v ? '1' : '0');
-
-function handleLogin() {
-  const input = document.getElementById('adminPasswordInput');
-  const error = document.getElementById('authError');
-  if (input.value.trim() === ADMIN_PASSWORD) {
-    setAuth(true);
-    document.getElementById('authOverlay').style.display = 'none';
-    initAdmin();
-  } else {
-    error.textContent = 'Senha incorreta. Tente novamente.';
-    input.value = ''; input.focus();
-  }
-}
-
-let _tt;
-function toast(msg, type = 'success') {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.className = `show ${type}`;
-  clearTimeout(_tt); _tt = setTimeout(() => { el.className = ''; }, 3000);
-}
-
-function showConfirm(title, msg, onOk) {
-  document.getElementById('confirmTitle').textContent = title;
-  document.getElementById('confirmMsg').textContent   = msg;
-  document.getElementById('confirmDialog').classList.add('open');
-  document.getElementById('confirmOk').onclick = () => {
-    document.getElementById('confirmDialog').classList.remove('open');
-    onOk();
-  };
-}
-
-function fetchCsv() {
-  fetch(CSV_URL)
-    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
-    .then(text => { const r = Papa.parse(text, { header: true, skipEmptyLines: true }); loadProducts(r.data); })
-    .catch(err => { console.error(err); toast('Não foi possível carregar o CSV. Use Importar CSV.', 'error'); });
-}
-
-function loadProducts(rows) {
-  adminProducts = rows.map((row, i) => ({
-    id: row.id || String(i + 1),
-    nome: row.nome || '', marca: row.marca || '', tipo: row.tipo || '', liga: row.liga || '',
-    preco_brl: row.preco_brl || row.preco_br || row.preco || '',
-    preco_usa: row.preco_usa || row.preco_usd || row.usd || '',
-    img_1: row.img_1 || '', img_2: row.img_2 || '', img_3: row.img_3 || '',
-    tamanhos: row.tamanhos || row.sizes || '',
-    descricao: row.descricao || row.desc || '',
-    badge: row.badge || ''
-  }));
-  populateFilters(); applyFilters(); updateSidebar();
-}
-
-function populateFilters() {
-  const marcas = [...new Set(adminProducts.map(p => p.marca).filter(Boolean))].sort();
-  const tipos  = [...new Set(adminProducts.map(p => p.tipo).filter(Boolean))].sort();
-  document.getElementById('filterMarca').innerHTML =
-    '<option value="">Todas as marcas</option>' + marcas.map(m => `<option>${esc(m)}</option>`).join('');
-  document.getElementById('filterTipo').innerHTML =
-    '<option value="">Todos os tipos</option>' + tipos.map(t => `<option>${esc(t)}</option>`).join('');
-}
-
-function applyFilters() {
-  const q     = (document.getElementById('searchInput')?.value || '').toLowerCase();
-  const marca = document.getElementById('filterMarca')?.value || '';
-  const tipo  = document.getElementById('filterTipo')?.value  || '';
-  filteredIndices = adminProducts
-    .map((p, i) => ({ p, i }))
-    .filter(({ p }) => {
-      const mQ = !q || [p.nome, p.marca, p.liga, p.tipo, p.id].some(v => (v || '').toLowerCase().includes(q));
-      return mQ && (!marca || p.marca === marca) && (!tipo || p.tipo === tipo);
-    })
-    .map(({ i }) => i);
-  renderTable();
-  document.getElementById('filteredCount').textContent =
-    filteredIndices.length === adminProducts.length
-      ? `${adminProducts.length} produtos`
-      : `${filteredIndices.length} de ${adminProducts.length}`;
-}
-
-function updateSidebar() {
-  document.getElementById('statCount').textContent = adminProducts.length;
-  const sel = document.getElementById('selectProductRow');
-  if (sel) sel.innerHTML = adminProducts.map((p, i) =>
-    `<option value="${i}">${esc(`${i+1} – ${p.nome || 'Sem nome'}`)}</option>`).join('');
-}
-
-function renderTable() {
-  const tbody = document.getElementById('adminBody');
-  tbody.innerHTML = '';
-  filteredIndices.forEach((ri, di) => {
-    const p  = adminProducts[ri];
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="row-num">${di + 1}</td>
-      <td><input data-i="${ri}" data-f="id"        value="${esc(p.id)}"         style="width:46px"></td>
-      <td><input data-i="${ri}" data-f="nome"       value="${esc(p.nome)}"></td>
-      <td><input data-i="${ri}" data-f="marca"      value="${esc(p.marca)}"     style="width:86px"></td>
-      <td><input data-i="${ri}" data-f="tipo"       value="${esc(p.tipo)}"      style="width:78px"></td>
-      <td><input data-i="${ri}" data-f="liga"       value="${esc(p.liga)}"      style="width:78px"></td>
-      <td><input data-i="${ri}" data-f="preco_brl"  value="${esc(p.preco_brl)}" style="width:66px"></td>
-      <td><input data-i="${ri}" data-f="preco_usa"  value="${esc(p.preco_usa)}" style="width:66px"></td>
-      <td class="img-cell">
-        <input data-i="${ri}" data-f="img_1" value="${esc(p.img_1)}">
-        <img class="img-preview" src="${prevUrl(p.img_1)}" onerror="this.src='https://placehold.co/80x80/131313/444?text=?'">
-      </td>
-      <td class="img-cell">
-        <input data-i="${ri}" data-f="img_2" value="${esc(p.img_2)}">
-        <img class="img-preview" src="${prevUrl(p.img_2)}" onerror="this.src='https://placehold.co/80x80/131313/444?text=?'">
-      </td>
-      <td class="img-cell">
-        <input data-i="${ri}" data-f="img_3" value="${esc(p.img_3)}">
-        <img class="img-preview" src="${prevUrl(p.img_3)}" onerror="this.src='https://placehold.co/80x80/131313/444?text=?'">
-      </td>
-      <td><textarea data-i="${ri}" data-f="tamanhos"  rows="2">${esc(p.tamanhos)}</textarea></td>
-      <td><textarea data-i="${ri}" data-f="descricao" rows="2">${esc(p.descricao)}</textarea></td>
-      <td>
-        <input data-i="${ri}" data-f="badge" value="${esc(p.badge)}" style="width:78px">
-        ${p.badge ? `<span class="badge-chip">${esc(p.badge)}</span>` : ''}
-      </td>
-      <td>
-        <button class="btn btn-sm btn-danger btn-del" data-i="${ri}" title="Excluir">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
-        </button>
-      </td>`;
-    tbody.appendChild(tr);
-  });
-  tbody.querySelectorAll('input[data-f], textarea[data-f]').forEach(el => el.addEventListener('input', onInput));
-  tbody.querySelectorAll('.btn-del').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const idx  = Number(e.currentTarget.dataset.i);
-      const name = adminProducts[idx]?.nome || `#${idx + 1}`;
-      showConfirm('Excluir produto', `Deseja excluir "${name}"?`, () => deleteProduct(idx));
-    });
-  });
-}
-
-function onInput(e) {
-  const idx   = Number(e.target.dataset.i);
-  const field = e.target.dataset.f;
-  if (!Number.isFinite(idx) || !field) return;
-  adminProducts[idx][field] = e.target.value;
-  if (field.startsWith('img_')) {
-    const img = e.target.nextElementSibling;
-    if (img?.tagName === 'IMG') img.src = prevUrl(e.target.value);
-  }
-}
-
-function addProduct() {
-  const maxId = adminProducts.length ? Math.max(...adminProducts.map(p => Number(p.id) || 0)) : 0;
-  adminProducts.push({ id: String(maxId + 1), nome: '', marca: '', tipo: '', liga: '',
-    preco_brl: '', preco_usa: '', img_1: '', img_2: '', img_3: '',
-    tamanhos: '', descricao: '', badge: '' });
-  document.getElementById('searchInput').value = '';
-  document.getElementById('filterMarca').value = '';
-  document.getElementById('filterTipo').value  = '';
-  applyFilters(); updateSidebar();
-  document.querySelector('.table-wrap').scrollTop = 99999;
-  toast('Produto adicionado.');
-}
-
-function deleteProduct(idx) {
-  adminProducts.splice(idx, 1);
-  applyFilters(); updateSidebar(); populateFilters();
-  toast('Produto excluído.', 'error');
-}
-
-function prevUrl(val) {
-  if (!val) return 'https://placehold.co/80x80/131313/444?text=?';
-  return val.trim().startsWith('http') ? val.trim() : BASE_URL_FOTOS + encodeURI(val.trim());
-}
-
-async function handleUpload() {
-  const setS = (msg, cls = '') => {
-    const el = document.getElementById('uploadStatus');
-    el.textContent = msg; el.className = 'upload-status ' + cls;
-  };
-  const file    = document.getElementById('imageFileUpload').files[0];
-  const acct    = document.getElementById('cfAccountId').value.trim();
-  const bucket  = document.getElementById('cfBucketName').value.trim();
-  const base    = document.getElementById('cfR2BaseUrl').value.trim();
-  const token   = document.getElementById('cfApiToken').value.trim();
-  const prodIdx = Number(document.getElementById('selectProductRow').value);
-  const field   = document.getElementById('selectImageSlot').value;
-
-  if (!file)                 return setS('Escolha um arquivo de imagem.', 'err');
-  if (!acct||!bucket||!token) return setS('Informe Account ID, Bucket Name e API Token.', 'err');
-  if (!['img_1','img_2','img_3'].includes(field)) return setS('Slot inválido.', 'err');
-
-  setS('Enviando para o Cloudflare R2…');
-  try {
-    const ep = `https://api.cloudflare.com/client/v4/accounts/${encodeURIComponent(acct)}/r2/buckets/${encodeURIComponent(bucket)}/objects/${encodeURIComponent(file.name)}`;
-    const res = await fetch(ep, {
-      method: 'PUT',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': file.type || 'application/octet-stream' },
-      body: file
-    });
-    const json = await res.json();
-    if (!res.ok || !json.success) throw new Error(json.errors?.map(e => e.message).join(', ') || 'Upload falhou');
-    const url = base
-      ? `${base.replace(/\/$/, '')}/${encodeURIComponent(file.name)}`
-      : `https://${acct}.r2.cloudflarestorage.com/${bucket}/${encodeURIComponent(file.name)}`;
-    adminProducts[prodIdx][field] = url;
-    applyFilters();
-    setS(`✓ Imagem enviada e inserida em ${field} do produto ${prodIdx + 1}.`, 'ok');
-    toast('Upload concluído!');
-  } catch (err) {
-    setS('Erro: ' + err.message, 'err');
-    toast('Erro no upload.', 'error');
-  }
-}
-
-function exportCsv() {
-  const csv = Papa.unparse(adminProducts, { quotes: true, delimiter: ',', header: true });
-  document.getElementById('csvOutput').value = csv;
-  dlFile(csv, 'text/csv;charset=utf-8;', 'Tabela_Sport_Closet_2026.csv');
-  toast('CSV exportado!'); switchTab('exportar');
-}
-function exportJson() {
-  const json = JSON.stringify(adminProducts, null, 2);
-  document.getElementById('csvOutput').value = json;
-  dlFile(json, 'application/json;charset=utf-8;', 'Tabela_Sport_Closet_2026.json');
-  toast('JSON exportado!'); switchTab('exportar');
-}
-function dlFile(text, mime, name) {
-  const a = Object.assign(document.createElement('a'), {
-    href: URL.createObjectURL(new Blob([text], { type: mime })), download: name
-  });
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-}
-function copyOutput() {
-  const v = document.getElementById('csvOutput').value;
-  if (!v) return toast('Gere uma exportação antes.', 'error');
-  navigator.clipboard.writeText(v).then(() => toast('Saída copiada!')).catch(() => toast('Erro ao copiar.', 'error'));
-}
-
-function switchTab(name) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === `tab-${name}`));
-  document.querySelectorAll('.tab-btn, .nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
-  const titles = { produtos: 'Produtos', upload: 'Upload R2', exportar: 'Exportar / Saída' };
-  document.getElementById('topBarTitle').textContent = titles[name] || name;
-}
-
-function esc(v) {
-  return String(v ?? '').replace(/[&<>"]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));
-}
-function togglePass(inputId, btnId) {
-  const inp = document.getElementById(inputId);
-  inp.type  = inp.type === 'password' ? 'text' : 'password';
-  document.getElementById(btnId).title = inp.type === 'password' ? 'Mostrar' : 'Ocultar';
-}
-
-function initAdmin() {
-  document.querySelectorAll('.tab-btn, .nav-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
-  document.getElementById('btnAdd').addEventListener('click', addProduct);
-  document.getElementById('btnExport').addEventListener('click', exportCsv);
-  document.getElementById('btnExportJson').addEventListener('click', exportJson);
-  document.getElementById('btnCopy').addEventListener('click', copyOutput);
-  document.getElementById('btnUploadImage').addEventListener('click', handleUpload);
-  document.getElementById('btnLogout').addEventListener('click', () =>
-    showConfirm('Sair', 'Encerrar a sessão?', () => { setAuth(false); location.reload(); }));
-
-  const fi = document.getElementById('csvImport');
-  document.getElementById('btnImport').addEventListener('click', () => fi.click());
-  fi.addEventListener('change', e => {
-    if (!e.target.files[0]) return;
-    const r = new FileReader();
-    r.onload = ev => {
-      const result = Papa.parse(ev.target.result, { header: true, skipEmptyLines: true });
-      loadProducts(result.data); toast(`${result.data.length} produtos importados!`);
-    };
-    r.readAsText(e.target.files[0], 'utf-8');
-  });
-
-  document.getElementById('searchInput').addEventListener('input', applyFilters);
-  document.getElementById('filterMarca').addEventListener('change', applyFilters);
-  document.getElementById('filterTipo').addEventListener('change', applyFilters);
-  document.getElementById('confirmCancel').addEventListener('click', () =>
-    document.getElementById('confirmDialog').classList.remove('open'));
-  document.getElementById('passToggle').addEventListener('click', () =>
-    togglePass('adminPasswordInput', 'passToggle'));
-  document.getElementById('cfTokenToggle')?.addEventListener('click', () =>
-    togglePass('cfApiToken', 'cfTokenToggle'));
-
-  fetchCsv();
-}
-
-function initAuth() {
-  document.getElementById('adminLoginBtn').addEventListener('click', handleLogin);
-  document.getElementById('adminPasswordInput').addEventListener('keyup', e => { if (e.key === 'Enter') handleLogin(); });
-  if (isAuth()) { document.getElementById('authOverlay').style.display = 'none'; initAdmin(); }
-}
-
-window.addEventListener('DOMContentLoaded', initAuth);
-</script>
+<script src="admin.js"></script>
 </body>
 </html>
