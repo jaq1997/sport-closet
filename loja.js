@@ -29,7 +29,7 @@ let curSize = null;
 /* ─── DICIONÁRIO DE TRADUÇÃO E TEXTOS ────────────────────────────────────────── */
 const i18n = {
   pt: {
-    price: "Preço sob consulta",
+    price: "", // Removido label obsoleto
     buy: "Pedir no WhatsApp",
     empty: "Nenhum produto encontrado.",
     found: "produtos encontrados",
@@ -89,6 +89,28 @@ const i18n = {
         "BEM-VINDO À SPORT CLOSET",
         "OS LANÇAMENTOS PARA A COPA DO MUNDO 2026 ESTÃO AQUI"
       ]
+    },
+    footer: {
+      explore: "EXPLORE",
+      support: "SUPORTE",
+      about: "SOBRE NÓS",
+      social: "SOCIAL",
+      aboutText: "O esporte mantém nossa forma. Mantém nosso foco. Nos une. Através dos esportes, temos o poder de mudar vidas — com histórias de atletas inspiradores e tecnologias inovadoras.",
+      faq: "Dúvidas Frequentes (FAQ)",
+      contact: "Fale Conosco",
+      rights: "© 2026 Sport Closet — Todos os direitos reservados."
+    },
+    mosaic: {
+      sneakers: { sub: "PISANDO COM ESTILO", tit: "OS MELHORES TÊNIS", cta: "Comprar" },
+      europe: { sub: "EM CAMPO", tit: "CLUBES EUROPEUS", cta: "Explorar" },
+      worldcup: { sub: "RUMO AO HEXA", tit: "COPA DO MUNDO 2026", cta: "Ver Agora" },
+      summer: { sub: "PARA O DIA A DIA", tit: "ROUPAS DE VERÃO", cta: "Descobrir" }
+    },
+    teamFilters: {
+      todos: "TODOS",
+      europeus: "EUROPEUS",
+      brasileiros: "BRASILEIROS",
+      selecoes: "SELEÇÕES"
     }
   },
   en: {
@@ -117,12 +139,12 @@ const i18n = {
       },
       heroSubtitle: {
         copa2026: "WORLD CUP 2026",
-        camisas: "CATEGORY",
+        camisas: "CARRY THE PASSION",
         tenis: "STYLE ON YOUR FEET",
         'roupas-verao': "FOR YOUR DAILY"
       },
       heroTitle: {
-        copa2026: "WORLD CUP <span>2026</span>",
+        copa2026: "THE BIGGEST FOOTBALL<br>JOURNEY <span>STARTS HERE</span>",
         camisas: "CLUB <span>JERSEYS</span>",
         tenis: "THE BEST<br><span>SNEAKERS</span>",
         'roupas-verao': "SUMMER <span>WEAR</span>"
@@ -150,6 +172,28 @@ const i18n = {
         "THE WORLD CUP 2026 COLLECTION IS HERE"
       ]
     },
+    footer: {
+      explore: "EXPLORE",
+      support: "SUPPORT",
+      about: "ABOUT US",
+      social: "SOCIAL",
+      aboutText: "Sport keeps us fit. Keeps us focused. Unites us. Through sports, we have the power to change lives — with stories of inspiring athletes and innovative technologies.",
+      faq: "Frequently Asked Questions (FAQ)",
+      contact: "Contact Us",
+      rights: "© 2026 Sport Closet — All rights reserved."
+    },
+    mosaic: {
+      sneakers: { sub: "STYLE ON YOUR FEET", tit: "THE BEST SNEAKERS", cta: "Shop Now" },
+      europe: { sub: "ON THE PITCH", tit: "EUROPEAN CLUBS", cta: "Explore" },
+      worldcup: { sub: "NATIONAL TEAMS", tit: "WORLD CUP 2026", cta: "See Now" },
+      summer: { sub: "DAILY ESSENTIALS", tit: "SUMMER WEAR", cta: "Discover" }
+    },
+    teamFilters: {
+      todos: "ALL",
+      europeus: "EUROPEAN",
+      brasileiros: "BRAZILIAN",
+      selecoes: "NATIONAL TEAMS"
+    },
     types: {
       "camisa de time": "Club Jersey",
       "camisa de seleção": "National Jersey",
@@ -159,6 +203,26 @@ const i18n = {
       "regata": "Tank Top",
       "casaco": "Jacket",
       "legging": "Legging"
+    },
+    descMap: {
+      "tecido": "fabric",
+      "respirável": "breathable",
+      "tecnologia": "technology",
+      "jogadores": "players",
+      "versão": "version",
+      "caimento": "fit",
+      "conforto": "comfort",
+      "durabilidade": "durability",
+      "composição": "composition",
+      "poliéster": "polyester",
+      "bordado": "embroidered",
+      "estampa": "print",
+      "qualidade": "quality",
+      "importado": "imported",
+      "seleção": "national team",
+      "time": "club",
+      "clássica": "classic",
+      "retrô": "retro"
     }
   }
 };
@@ -201,13 +265,25 @@ function wppMsg(p, sz) {
   return encodeURIComponent(message);
 }
 
+function translateDesc(text) {
+  if (!isUsa() || !text) return text;
+  let translated = text.toLowerCase();
+  const map = i18n.en.descMap;
+  for (const key in map) {
+    const regex = new RegExp(`\\b${key}\\b`, 'gi');
+    translated = translated.replace(regex, map[key]);
+  }
+  // Primeira letra maiúscula
+  return translated.charAt(0).toUpperCase() + translated.slice(1);
+}
+
 function formatPrice(p) {
-    if (isUsa()) {
-        return p.usd && p.usd > 0 ? `$${p.usd.toFixed(2)}` : getLang().price;
-    }
-    const price = p.brl || 0;
-    const formatted = price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    return price > 0 ? formatted : getLang().price;
+  if (isUsa()) {
+    return p.usd && p.usd > 0 ? `$${p.usd.toFixed(2)}` : "";
+  }
+  const price = p.brl || 0;
+  if (price === 0) return "";
+  return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
 const wppSvg = `<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.535 5.858L.057 23.633a.5.5 0 0 0 .61.61l5.775-1.478A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.944 9.944 0 0 1-5.088-1.392l-.363-.216-3.763.963.982-3.637-.237-.376A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>`;
@@ -218,6 +294,11 @@ function setFilter(group, value) {
   document.querySelectorAll(`.fb[data-g="${group}"]`).forEach(b => {
     b.classList.toggle('active', norm(b.dataset.v) === norm(value));
   });
+  
+  // Limpa o grid antes de re-renderizar para evitar flicker visual de itens antigos
+  const grid = document.getElementById('grid') || document.getElementById('grid-drop-exclusivo');
+  if (grid) grid.innerHTML = '';
+  
   renderGrid();
 }
 
@@ -245,6 +326,7 @@ function toggleRegion() {
   localStorage.setItem('sport_closet_usa', newVal);
   updateStaticTexts();
   renderGrid();
+  if (pageName === 'index') renderTeamSlider('todos');
 }
 
 
@@ -305,9 +387,7 @@ function updateStaticTexts() {
   if (pageName === 'index' && Array.isArray(lang.labels.section.index)) {
     const ft = document.querySelector('.finder-title');
     if (ft && lang.labels.section.finder) {
-      if (ft.innerHTML !== lang.labels.section.finder) {
-        ft.innerHTML = lang.labels.section.finder;
-      }
+      ft.innerHTML = lang.labels.section.finder;
     }
     
     // Títulos específicos da Home (Lançamentos / Mais Procurados)
@@ -375,7 +455,6 @@ function updateStaticTexts() {
     });
   }
 
-  // Page title tag
   const titleMap = {
     index: 'Sport Closet — Camisas de Time, Tênis e Roupas de Verão',
     copa2026: 'Copa 2026 — Sport Closet',
@@ -384,20 +463,65 @@ function updateStaticTexts() {
     'roupas-verao': 'Roupas de Verão — Sport Closet'
   };
 
+  const titleMapEn = {
+    index: 'Sport Closet — Club Jerseys, Sneakers and Summer Wear',
+    copa2026: 'World Cup 2026 — Sport Closet',
+    camisas: 'Club Jerseys — Sport Closet',
+    tenis: 'Sneakers — Sport Closet',
+    'roupas-verao': 'Summer Wear — Sport Closet'
+  };
+  
   if (document.title && titleMap[pageName]) {
-    document.title = titleMap[pageName];
+    document.title = isUsa() ? (titleMapEn[pageName] || titleMap[pageName]) : titleMap[pageName];
   }
 
-  if (isUsa()) {
-    const titleMapEn = {
-      index: 'Sport Closet — Club Jerseys, Sneakers and Summer Wear',
-      copa2026: 'World Cup 2026 — Sport Closet',
-      camisas: 'Club Jerseys — Sport Closet',
-      tenis: 'Sneakers — Sport Closet',
-      'roupas-verao': 'Summer Wear — Sport Closet'
-    };
-    document.title = titleMapEn[pageName] || document.title;
+  const footerCopyright = document.querySelector('.footer-legal');
+  if (footerCopyright) footerCopyright.textContent = lang.footer.rights;
+  
+  const footAbout = document.querySelector('.footer-col p');
+  if (footAbout) footAbout.textContent = lang.footer.aboutText;
+
+  const footHeaders = document.querySelectorAll('.footer-col h4');
+  if (footHeaders.length >= 4) {
+    footHeaders[0].textContent = lang.footer.explore;
+    footHeaders[1].textContent = lang.footer.support;
+    footHeaders[2].textContent = lang.footer.about;
+    footHeaders[3].textContent = lang.footer.social;
   }
+
+  const footLinks = document.querySelectorAll('.footer-col ul li a');
+  footLinks.forEach(a => {
+    if (a.textContent.includes('FAQ')) a.textContent = lang.footer.faq;
+    if (a.textContent.includes('Fale Conosco') || a.textContent.includes('Contact')) a.textContent = lang.footer.contact;
+  });
+
+  // Mosaic Translations (Home)
+  const mosaicItems = document.querySelectorAll('.mosaic-item');
+  if (mosaicItems.length >= 4) {
+    const m = lang.mosaic;
+    const updateMosaic = (item, data) => {
+      if (!item) return;
+      const sub = item.querySelector('.m-sub');
+      const tit = item.querySelector('.m-tit');
+      const cta = item.querySelector('.m-cta');
+      if (sub) sub.textContent = data.sub;
+      if (tit) tit.textContent = data.tit;
+      if (cta) cta.textContent = data.cta;
+    };
+    updateMosaic(mosaicItems[0], m.sneakers);
+    updateMosaic(mosaicItems[1], m.europe);
+    updateMosaic(mosaicItems[2], m.worldcup);
+    updateMosaic(mosaicItems[3], m.summer);
+  }
+
+  // Team Finder Filters
+  document.querySelectorAll('.fp').forEach(btn => {
+    const val = btn.textContent.toLowerCase();
+    if (val.includes('todos') || val.includes('all')) btn.textContent = lang.teamFilters.todos;
+    if (val.includes('europeus') || val.includes('european')) btn.textContent = lang.teamFilters.europeus;
+    if (val.includes('brasileiros') || val.includes('brazilian')) btn.textContent = lang.teamFilters.brasileiros;
+    if (val.includes('seleções') || val.includes('national')) btn.textContent = lang.teamFilters.selecoes;
+  });
 }
 
 /* ─── ALGORITMO DE RANDOMIZAÇÃO (FISHER-YATES) ─────────────────────────── */
@@ -573,8 +697,15 @@ function openModal(id) {
   document.getElementById('mName').textContent = curProd.nome;
   document.getElementById('mType').textContent = tStr(curProd.tipo).toUpperCase();
   document.getElementById('mPrice').textContent = formatPrice(curProd);
-  document.getElementById('mPriceAlt').textContent = isUsa() ? formatPrice({ brl: curProd.brl }) : formatPrice({ usd: curProd.usd });
-  document.getElementById('mDesc').textContent = curProd.desc || "";
+  
+  const altPrice = isUsa() ? formatPrice({ brl: curProd.brl }) : formatPrice({ usd: curProd.usd });
+  const altEl = document.getElementById('mPriceAlt');
+  if (altEl) {
+    altEl.textContent = altPrice;
+    altEl.style.display = altPrice ? 'block' : 'none';
+  }
+
+  document.getElementById('mDesc').textContent = translateDesc(curProd.desc) || "";
 
   document.getElementById('mSizes').innerHTML = (curProd.tamanhos || [])
     .map(s => `<button class="sz" onclick="selSize('${s}',this)">${s}</button>`).join('');
@@ -649,9 +780,33 @@ function updateChevrons() {
 
 /* ─── INICIALIZAÇÃO ──────────────────────────────────────────────────────── */
 function init() {
+    // 1. Inicializar Estado de Região (Prioridade Máxima)
+    const btn = document.getElementById('regionBtn');
+    const savedUsa = localStorage.getItem('sport_closet_usa');
+
+    if (btn) {
+        btn.onclick = null; // Limpa onclick do HTML
+        btn.addEventListener('click', toggleRegion);
+        if (savedUsa === '1') {
+            btn.dataset.usa = '1';
+            btn.textContent = '🇺🇸 USA ($)';
+        } else {
+            btn.dataset.usa = '0';
+            btn.textContent = '🇧🇷 Brasil (R$)';
+        }
+    }
+
+    // 2. Traduzir e Renderizar
+    try {
+      updateStaticTexts();
+    } catch (e) {
+      console.error("Erro ao atualizar textos estáticos:", e);
+    }
+    
     renderGrid();
     if (pageName === 'index') renderTeamSlider('todos');
     
+    // 3. Eventos Adicionais
     const inputs = document.querySelectorAll('.nav-search-input');
     inputs.forEach(input => {
         input.addEventListener('input', () => {
@@ -665,22 +820,17 @@ function init() {
     document.getElementById('overlay')?.addEventListener('click', (e) => closeModal(e));
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-    const savedUsa = localStorage.getItem('sport_closet_usa');
-    const btn = document.getElementById('regionBtn');
-    if (btn && savedUsa === '1') {
-        btn.dataset.usa = '1';
-        btn.textContent = '🇺🇸 USA ($)';
-    } else if (btn) {
-        btn.textContent = '🇧🇷 Brasil (R$)'
-    }
-    updateStaticTexts();
+    // 4. Finalizar carregamento suave (Aumentado para evitar pulos em telas internas)
+    setTimeout(() => {
+      document.body.classList.remove('is-loading');
+    }, 600);
 }
-
 
 /* ─── CARREGAMENTO DOS DADOS DO CSV LOCAL ──────────────────────────────── */
 const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTJJsi5MlreQayUKZtiZIwb0RcZCPa5ngJOkOmq-uCkKvtxVD8oRvYIJuYosn-22qsXtCsZsHJHfjhs/pub?output=csv';
 
 function bootStore() {
+  document.body.classList.add('is-loading');
   const sc = document.createElement('script');
   sc.src = "https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js";
   sc.onload = () => {
@@ -730,9 +880,9 @@ function processCSVData(data) {
     return {
       id: row.id || index + 1,
       nome: row.nome || '',
-      marca: (row.marca || '').toLowerCase(),
-      tipo: (row.tipo || '').toLowerCase(),
-      liga: (row.liga || '').toLowerCase(),
+      marca: norm(row.marca),
+      tipo: norm(row.tipo),
+      liga: norm(row.liga),
       brl: parseFloat((row.preco_brl || '0').replace(',', '.')) || 0,
       usd: parseFloat((row.preco_usa || '0').replace(',', '.')) || 0,
       tamanhos: tamanhos,

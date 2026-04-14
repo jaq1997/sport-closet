@@ -53,6 +53,13 @@ body {
   font-family: var(--font-b);
   font-size: 14px;
   overflow-x: hidden;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+body.is-loading {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* ─── TICKER ────────────────────────────────────────────────────────────────── */
@@ -1053,15 +1060,17 @@ nav {
 }
 
 .m-price {
-  font-size: 28px;
-  font-weight: 500;
-  margin-bottom: 3px;
+  font-family: var(--font-d);
+  font-size: 34px;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 2px;
 }
 
 .m-price-alt {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted);
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
 
 .m-label {
