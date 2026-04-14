@@ -175,8 +175,10 @@ nav {
 }
 
 .insta-circle:hover img {
-  filter: brightness(1.2) saturate(1.5);
+  /* Mantém o filtro laranja e adiciona o boost de brilho e saturação */
+  filter: invert(72%) sepia(74%) saturate(3500%) hue-rotate(359deg) brightness(1.3) contrast(106%);
 }
+
 
 
 
