@@ -75,6 +75,7 @@ async function fetchFromSheets() {
     // Se o Apps Script retornou sucesso e tem dados, usa eles
     if (json.ok && json.data && json.data.length > 0) {
       loadProducts(json.data);
+      window.dispatchEvent(new CustomEvent('productsLoaded', { detail: json.data }));
       toast(`${json.data.length} produtos carregados do Google Sheets.`);
     } else {
       // Fallback para o CSV Público se o Apps Script estiver vazio ou falhar
@@ -86,6 +87,7 @@ async function fetchFromSheets() {
         skipEmptyLines: true,
         complete: (results) => {
           loadProducts(results.data);
+          window.dispatchEvent(new CustomEvent('productsLoaded', { detail: results.data }));
           toast(`${results.data.length} produtos carregados via CSV (Apps Script vazio).`);
         }
       });

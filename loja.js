@@ -70,12 +70,12 @@ const i18n = {
 
       heroSubtitle: {
         copa2026: "COPA 2026",
-        camisas: "CATEGORIA",
+        camisas: "LEVE A PAIXÃO",
         tenis: "PISANDO COM ESTILO",
         'roupas-verao': "PARA O DIA A DIA"
       },
       heroTitle: {
-        copa2026: "COPA <span>2026</span>",
+        copa2026: "A MAIOR JORNADA DO<br>FUTEBOL <span>COMEÇA AQUI</span>",
         camisas: "CAMISAS<br>DE <span>TIME</span>",
         tenis: "OS MELHORES<br><span>TÊNIS</span>",
 
@@ -166,8 +166,13 @@ const i18n = {
 /* ─── HELPERS ──────────────────────────────────────────────────────────── */
 const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 
-function isUsa() { return document.getElementById('regionBtn')?.dataset.usa === '1'; }
+function isUsa() { 
+  const btn = document.getElementById('regionBtn');
+  if (btn) return btn.dataset.usa === '1';
+  return localStorage.getItem('sport_closet_usa') === '1';
+}
 function getLang() { return isUsa() ? i18n.en : i18n.pt; }
+
 
 function tStr(str) {
   if (!str) return '';
@@ -218,19 +223,30 @@ function setFilter(group, value) {
 
 function handleSearch(val) {
   searchQuery = norm(val);
+  
+  // UX: Ocultar banners se houver busca ativa
+  const isSearching = searchQuery.length > 0;
+  document.body.classList.toggle('search-active-ui', isSearching);
+  
   renderGrid();
 }
 
+
 function toggleRegion() {
   const btn = document.getElementById('regionBtn');
-  if (!btn) return;
-  const isCurrentlyUsa = btn.dataset.usa === '1';
-  btn.dataset.usa = isCurrentlyUsa ? '0' : '1';
-  btn.textContent = isCurrentlyUsa ? '🇧🇷 Brasil (R$)' : '🇺🇸 USA ($)';
-  localStorage.setItem('sport_closet_usa', btn.dataset.usa);
+  const isCurrentlyUsa = isUsa();
+  const newVal = isCurrentlyUsa ? '0' : '1';
+  
+  if (btn) {
+    btn.dataset.usa = newVal;
+    btn.textContent = newVal === '1' ? '🇺🇸 USA ($)' : '🇧🇷 Brasil (R$)';
+  }
+  
+  localStorage.setItem('sport_closet_usa', newVal);
   updateStaticTexts();
   renderGrid();
 }
+
 
 function toggleBrandsDropdown(event) {
   event.stopPropagation();
@@ -268,9 +284,9 @@ function updateStaticTexts() {
   document.querySelectorAll('.m-label').forEach(el => {
     el.textContent = lang.labels.modalSizeLabel;
   });
-  const footerText = document.querySelector('footer div');
-  if (footerText) footerText.textContent = lang.labels.footer;
+  // Dynamic content updates
   const wppFloat = document.querySelector('.wpp-float');
+
   if (wppFloat) wppFloat.setAttribute('aria-label', lang.labels.whatsappAria);
 
   // Filter labels
@@ -449,8 +465,52 @@ function renderGrid() {
         const grid2 = document.getElementById('grid-mais-vistos');
         if (grid2) grid2.innerHTML = '';
     }
+
+    // Atualiza visibilidade dos botões de filtro
+    refreshFilterVisibility(list);
   }
 }
+
+/** 
+ * Oculta botões de filtro (FB/FP) se não houver produtos correspondentes 
+ * no set atual de dados filtrados (ignorando o próprio grupo pra não 'travar')
+ */
+function refreshFilterVisibility(filteredList) {
+  const allProds = window.produtos || [];
+  
+  // Para cada grupo de filtro (marca, liga, tipo/sponsor)
+  ['marca', 'liga', 'tipo'].forEach(group => {
+    const buttons = document.querySelectorAll(`.fb[data-g="${group}"], .fp[data-g="${group}"]`);
+    buttons.forEach(btn => {
+      const val = norm(btn.dataset.v);
+      if (val === 'todos') return;
+
+      // Verifica se existe algum produto com este valor no contexto da página
+      const exists = allProds.some(p => {
+        // Deve respeitar o tipo da página (ex: se estou em camisas, só conta camisas)
+        let matchPage = false;
+        if (pageName === 'index') matchPage = true;
+        else if (Array.isArray(pageType)) matchPage = pageType.map(pt => norm(pt)).includes(norm(p.tipo));
+        else matchPage = norm(p.tipo) === norm(pageType);
+
+        if (!matchPage) return false;
+
+        if (group === 'marca') return norm(p.marca) === val;
+        if (group === 'liga') return norm(p.liga) === val;
+        if (group === 'tipo') return norm(p.marca) === val; // Sponsor na Copa
+        return false;
+      });
+
+      btn.style.display = exists ? 'inline-block' : 'none';
+      
+      // Caso o filtro selecionado tenha sumido (improvável com a lógica acima), resetamos
+      if (!exists && activeFilters[group] === val) {
+        setFilter(group, 'todos');
+      }
+    });
+  });
+}
+
 
 function desenharCards(containerId, lista) {
   const grid = document.getElementById(containerId);
@@ -480,10 +540,11 @@ function desenharCards(containerId, lista) {
         <div class="card-name">${p.nome}</div>
         <div class="card-footer">
           <div class="card-price">${formatPrice(p)}</div>
-          <button class="grid-wpp-btn" style="display:flex; align-items:center; justify-content:center; gap:8px; background:#25D366; color:white; border:none; width:100%; padding:12px; font-size:11px; font-weight:800; cursor:pointer;" onclick="event.stopPropagation(); window.open('https://wa.me/${WPP}?text=${wppMsg(p)}', '_blank')">
+          <button class="grid-wpp-btn" onclick="event.stopPropagation(); window.open('https://wa.me/${WPP}?text=${wppMsg(p)}', '_blank')">
             <span style="display:flex; width:16px; height:16px;">${wppSvg.replace('<svg ', '<svg style="width:16px;height:16px;fill:currentColor;" ')}</span>
             ${isUsa() ? 'ORDER ON WHATSAPP' : 'COMPRAR NO WHATSAPP'}
           </button>
+
 
 
         </div>
@@ -725,4 +786,11 @@ function scrollTeamSlider(dir) {
 }
 
 document.addEventListener('DOMContentLoaded', bootStore);
+window.addEventListener('productsLoaded', () => {
+  // Re-renderizar se os produtos acabaram de carregar do Google Sheets
+  renderGrid();
+  // Se for a home, recarregar o slider de times também
+  if (pageName === 'index') renderTeamSlider('todos');
+});
+
 

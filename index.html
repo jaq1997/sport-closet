@@ -27,7 +27,7 @@
   </style>
 </head>
 
-<body class="home">
+<body class="home" data-page="index">
   <div class="ticker">
     <div class="ticker-inner">
         <span>BEM-VINDO À SPORT CLOSET</span><span>✦</span>
@@ -46,7 +46,11 @@
         </svg>
       </div>
     </div>
-    <a href="index.html" class="nav-logo-link"><span class="logo-text">Sport Closet</span></a>
+    <a href="index.html" class="nav-logo-link">
+      <img src="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/logo-horizontal.png" class="logo-horizontal" alt="Sport Closet">
+    </a>
+
+
     <div class="nav-search nav-search-desktop">
       <input type="text" class="nav-search-input" placeholder="Pesquisar produtos (nome, marca, tipo)..."
         oninput="handleSearch(this.value)">
@@ -78,28 +82,37 @@
   <div class="hero-slider" id="heroSlider">
     <div class="slide active slide-right" onclick="window.location='tenis.html'">
       <picture>
-        <source media="(max-width: 768px)" srcset="banners/hero-3-mobile.jpg">
-        <img src="banners/hero-3-desktop.jpg" alt="Banner New Balance" loading="eager">
+        <source media="(max-width: 768px)" srcset="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/hero-3-mobile.jpg">
+        <img src="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/hero-3-desktop.jpg" alt="Banner New Balance" loading="eager">
       </picture>
       <div class="slide-content">
-        <div class="slide-subtitle">ESTILO URBANO</div>
+        <div class="slide-subtitle">PISANDO COM ESTILO</div>
         <div class="slide-title">NEW BALANCE<br>530 SERIES</div>
         <button class="slide-btn">EXPLORE AGORA</button>
       </div>
-
-
-
     </div>
     <div class="slide" onclick="window.location='copa2026.html'">
       <picture>
-        <source media="(max-width: 768px)" srcset="banners/hero-1-mobile.jpg">
-        <img src="banners/hero-1-desktop.jpg" alt="Banner Copa 2026" loading="lazy">
+        <source media="(max-width: 768px)" srcset="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/hero-1-mobile.jpg">
+        <img src="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/hero-1-desktop.jpg" alt="Banner Copa 2026" loading="lazy">
       </picture>
       <div class="slide-content">
-        <div class="slide-subtitle">NOVA COLEÇÃO</div>
+        <div class="slide-subtitle">RUMO AO HEXA</div>
         <div class="slide-title">CAMISAS DE<br>SELEÇÃO</div>
-        <button class="slide-btn">VEJA AGORA</button>
+        <button class="slide-btn">VER COLEÇÃO</button>
       </div>
+    </div>
+    <div class="slide" onclick="window.location='roupas-verao.html'">
+      <picture>
+        <source media="(max-width: 768px)" srcset="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/hero-2-mobile.jpg">
+        <img src="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/hero-2-desktop.jpg" alt="Banner Roupas de Verão" loading="lazy">
+      </picture>
+      <div class="slide-content">
+        <div class="slide-subtitle">PARA O DIA A DIA</div>
+        <div class="slide-title">ROUPAS DE <span>VERÃO</span></div>
+        <button class="slide-btn">CONFERIR</button>
+      </div>
+    </div>
     </div>
   </div>
 
@@ -108,15 +121,16 @@
   <section class="lifestyle-mosaic">
     <div class="mosaic-grid">
       <a href="tenis.html" class="mosaic-item">
-        <img src="banners/promo-3-desktop.jpg" alt="Tênis Adidas Campus">
+        <img src="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/promo-3-desktop.jpg" alt="Tênis Adidas Campus">
         <div class="mosaic-overlay">
-          <div class="m-sub">ESTILO URBANO</div>
+          <div class="m-sub">PISANDO COM ESTILO</div>
           <div class="m-tit">OS MELHORES TÊNIS</div>
           <span class="m-cta">Comprar</span>
         </div>
+
       </a>
       <a href="camisas.html" class="mosaic-item">
-        <img src="banners/hero-1-desktop.jpg" alt="Clubes Europeus">
+        <img src="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/hero-1-desktop.jpg" alt="Clubes Europeus">
         <div class="mosaic-overlay">
           <div class="m-sub">EM CAMPO</div>
           <div class="m-tit">CLUBES EUROPEUS</div>
@@ -124,7 +138,7 @@
         </div>
       </a>
       <a href="copa2026.html" class="mosaic-item">
-        <img src="banners/hero-1-desktop.jpg" alt="Copa 2026">
+        <img src="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/hero-1-desktop.jpg" alt="Copa 2026">
         <div class="mosaic-overlay">
           <div class="m-sub">RUMO AO HEXA</div>
           <div class="m-tit">COPA DO MUNDO 2026</div>
@@ -132,7 +146,7 @@
         </div>
       </a>
       <a href="roupas-verao.html" class="mosaic-item">
-        <img src="banners/hero-2-desktop.jpg" alt="Roupas de Verão">
+        <img src="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/hero-2-desktop.jpg" alt="Roupas de Verão">
 
         <div class="mosaic-overlay">
           <div class="m-sub">PARA O DIA A DIA</div>
@@ -212,9 +226,52 @@
     </div>
   </div>
   <footer>
-    <a href="index.html" class="nav-logo-link"><span class="logo-text">Sport Closet</span></a>
-    <div>© 2026 Sport Closet — Todos os direitos reservados</div>
+    <div class="footer-content">
+      <div class="footer-col">
+        <h4>EXPLORE</h4>
+        <ul>
+          <li><a href="camisas.html">Camisas de Time</a></li>
+          <li><a href="tenis.html">Tênis Lifestyle</a></li>
+          <li><a href="copa2026.html">Copa do Mundo 2026</a></li>
+          <li><a href="roupas-verao.html">Roupas de Verão</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>SUPORTE</h4>
+        <ul>
+          <li><a href="https://wa.me/5531992082542?text=Olá!%20Tenho%20uma%20dúvida%20sobre%20o%20Sport%20Closet...">Dúvidas Frequentes (FAQ)</a></li>
+
+          <li><a href="https://wa.me/5531992082542">Fale Conosco</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>SOBRE NÓS</h4>
+        <p style="font-size:12px; line-height:1.6; color:var(--muted);">O esporte mantém nossa forma. Mantém nosso foco. Nos une. Através dos esportes, temos o poder de mudar vidas — com histórias de atletas inspiradores e tecnologias inovadoras.</p>
+      </div>
+      <div class="footer-col">
+        <h4>SOCIAL</h4>
+        <a href="https://instagram.com/sportcloset" target="_blank" class="insta-circle">
+          <img src="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/instagram.svg" alt="Instagram">
+        </a>
+
+      </div>
+
+    </div>
+    
+    <div class="footer-bottom">
+      <a href="index.html" class="nav-logo-link" style="margin-bottom:10px;">
+        <img src="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/logo-vertical.png" class="logo-vertical" alt="Sport Closet Seal">
+      </a>
+
+      <div class="footer-legal">
+
+        © 2026 Sport Closet — Todos os direitos reservados. 
+      </div>
+
+    </div>
+
   </footer>
+
   <script src="produtos.js"></script>
   <script src="loja.js"></script>
   <script src="animacoes.js"></script>

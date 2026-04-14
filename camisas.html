@@ -26,7 +26,7 @@
   </style>
 </head>
 
-<body class="brand-page">
+<body class="brand-page" data-page="camisas">
   <div class="ticker">
     <div class="ticker-inner">
         <span>BEM-VINDO À SPORT CLOSET</span><span>✦</span>
@@ -45,7 +45,11 @@
         </svg>
       </div>
     </div>
-    <a href="index.html" class="nav-logo-link"><span class="logo-text">Sport Closet</span></a>
+    <a href="index.html" class="nav-logo-link">
+      <img src="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/logo-horizontal.png" class="logo-horizontal" alt="Sport Closet">
+    </a>
+
+
     <div class="nav-search nav-search-desktop">
       <input type="text" class="nav-search-input" placeholder="Pesquisar produtos (nome, marca, tipo)..."
         oninput="handleSearch(this.value)">
@@ -83,9 +87,10 @@
           loading="eager">
       </picture>
       <div class="slide-content">
-        <div class="slide-subtitle">CATEGORIA</div>
+        <div class="slide-subtitle">LEVE A PAIXÃO</div>
         <div class="slide-title">CAMISAS<br>DE <span>TIME</span></div>
       </div>
+
     </div>
   </div>
   <div class="filter-section">
@@ -136,9 +141,52 @@
     </div>
   </div>
   <footer>
-    <a href="index.html" class="nav-logo-link"><span class="logo-text">Sport Closet</span></a>
-    <div>© 2026 Sport Closet — Todos os direitos reservados</div>
+    <div class="footer-content">
+      <div class="footer-col">
+        <h4>EXPLORE</h4>
+        <ul>
+          <li><a href="camisas.html">Camisas de Time</a></li>
+          <li><a href="tenis.html">Tênis Lifestyle</a></li>
+          <li><a href="copa2026.html">Copa do Mundo 2026</a></li>
+          <li><a href="roupas-verao.html">Roupas de Verão</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>SUPORTE</h4>
+        <ul>
+          <li><a href="https://wa.me/5531992082542?text=Olá!%20Tenho%20uma%20dúvida%20sobre%20o%20Sport%20Closet...">Dúvidas Frequentes (FAQ)</a></li>
+
+          <li><a href="https://wa.me/5531992082542">Fale Conosco</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>SOBRE NÓS</h4>
+        <p style="font-size:12px; line-height:1.6; color:var(--muted);">O esporte mantém nossa forma. Mantém nosso foco. Nos une. Através dos esportes, temos o poder de mudar vidas — com histórias de atletas inspiradores e tecnologias inovadoras.</p>
+      </div>
+      <div class="footer-col">
+        <h4>SOCIAL</h4>
+        <a href="https://instagram.com/sportcloset" target="_blank" class="insta-circle">
+          <img src="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/instagram.svg" alt="Instagram">
+        </a>
+
+      </div>
+
+    </div>
+    
+    <div class="footer-bottom">
+      <a href="index.html" class="nav-logo-link" style="margin-bottom:10px;">
+        <img src="https://pub-4af8db08776e49b78718c90c788bddab.r2.dev/logo-vertical.png" class="logo-vertical" alt="Sport Closet Seal">
+      </a>
+
+      <div class="footer-legal">
+
+        © 2026 Sport Closet — Todos os direitos reservados. 
+      </div>
+
+    </div>
+
   </footer>
+
   <script src="produtos.js"></script>
   <script src="loja.js"></script>
   <script src="animacoes.js"></script>
