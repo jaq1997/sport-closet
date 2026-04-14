@@ -442,7 +442,36 @@ table.prod-table td textarea:focus { border-color: var(--accent); background: va
   display: flex; justify-content: flex-end; gap: 12px;
 }
 
-@media (max-width: 800px) {
+/* ── IMAGENS INTEGRADAS ────────────────────────────────────────── */
+.field-with-btn {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+}
+.field-with-btn input {
+  flex: 1;
+}
+.btn-slot-upload {
+  background: var(--gray2);
+  border: 1px solid var(--gray3);
+  color: var(--accent);
+  padding: 0 12px;
+  cursor: pointer;
+  transition: all var(--transition);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-slot-upload:hover {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+.btn-slot-upload:active {
+  transform: scale(0.95);
+}
 
   .sidebar { display: none; }
   .top-bar { padding: 0 16px; }

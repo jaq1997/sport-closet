@@ -30,6 +30,36 @@ function handleLogin() {
   }
 }
 
+function initAdmin() {
+  if (!isAuth()) return;
+  loadR2Config();
+  fetchFromSheets();
+
+  // Listeners
+  document.getElementById('btnAdd')?.addEventListener('click', addProduct);
+  document.getElementById('btnSave')?.addEventListener('click', saveToSheets);
+  document.getElementById('btnReload')?.addEventListener('click', fetchFromSheets);
+  document.getElementById('btnLogout')?.addEventListener('click', () => { setAuth(false); location.reload(); });
+  document.getElementById('searchInput')?.addEventListener('input', applyFilters);
+  document.getElementById('filterMarca')?.addEventListener('change', applyFilters);
+  document.getElementById('filterTipo')?.addEventListener('change', applyFilters);
+  document.getElementById('btnCloseModal')?.addEventListener('click', closeProductModal);
+  document.getElementById('btnCancelModal')?.addEventListener('click', closeProductModal);
+  document.getElementById('btnSaveModal')?.addEventListener('click', saveProductModal);
+
+  // R2 settings
+  document.getElementById('btnToggleSettings')?.addEventListener('click', () => {
+    const el = document.getElementById('settingsR2');
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  });
+  
+  // Salvar config R2 ao digitar
+  ['modalAcct', 'modalBucket', 'modalToken', 'modalBase'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', saveR2Config);
+  });
+}
+
+
 // ── TOAST ──────────────────────────────────────────────────────────────────
 let _tt;
 function toast(msg, type = 'success') {
@@ -107,7 +137,7 @@ async function saveToSheets() {
     return;
   }
 
-  setLoading(true, 'Salvando na planilha…');
+  setLoading(true, 'Sincronizando com Sheets…');
 
   try {
     const res = await fetch(APPS_SCRIPT_URL, {
@@ -115,16 +145,24 @@ async function saveToSheets() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'save', data: adminProducts })
     });
+    
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Servidor retornou ${res.status}: ${text.slice(0, 50)}...`);
+    }
+
     const json = await res.json();
-    if (!json.ok) throw new Error(json.error || 'Erro desconhecido');
-    toast(`✓ ${json.saved} produtos salvos no Google Sheets!`);
-    setLoading(false, `Salvo às ${new Date().toLocaleTimeString('pt-BR')}`);
+    if (!json.ok) throw new Error(json.error || 'Erro na resposta do Google');
+    
+    toast(`✓ Sincronizado com Google Sheets! (${json.saved} produtos)`);
+    setLoading(false, `Último Sync: ${new Date().toLocaleTimeString('pt-BR')}`);
   } catch (err) {
-    console.error(err);
+    console.error("Erro no Apps Script:", err);
     setLoading(false, '');
-    toast('Erro ao salvar: ' + err.message, 'error');
+    toast('Erro de Sincronização: ' + err.message, 'error');
   }
 }
+
 
 // ── CARREGAR PRODUTOS ──────────────────────────────────────────────────────
 function loadProducts(rows) {
@@ -183,6 +221,22 @@ function closeProductModal() {
   activeEditIndex = -1;
 }
 
+// ── UTILITÁRIOS ─────────────────────────────────────────────────────────────
+function norm(str) {
+  if (!str) return '';
+  return str.toString()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function esc(str) {
+  if (!str) return '';
+  const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+  return String(str).replace(/[&<>"']/g, m => map[m]);
+}
+
 function saveProductModal() {
   if (activeEditIndex === -1) return;
 
@@ -204,8 +258,11 @@ function saveProductModal() {
   closeProductModal();
   applyFilters();
   updateSidebar();
-  toast('Alterações salvas no rascunho local!');
+  
+  // Instant Sync: Salva e Publica em um só passo
+  saveToSheets();
 }
+
 
 
 // ── FILTROS ────────────────────────────────────────────────────────────────
@@ -221,15 +278,15 @@ function populateFilters() {
 }
 
 function applyFilters() {
-  const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  const q = norm(document.getElementById('searchInput')?.value || '');
   const marca = document.getElementById('filterMarca')?.value || '';
   const tipo = document.getElementById('filterTipo')?.value || '';
 
   filteredIndices = adminProducts
     .map((p, i) => ({ p, i }))
     .filter(({ p }) => {
-      const mQ = !q || [p.nome, p.marca, p.liga, p.tipo, p.id]
-        .some(v => (v || '').toLowerCase().includes(q));
+      const mQ = !q || [p.nome, p.marca, p.liga, p.tipo, p.id, p.descricao]
+        .some(v => norm(v).includes(q));
       return mQ && (!marca || p.marca === marca) && (!tipo || p.tipo === tipo);
     })
     .map(({ i }) => i);
@@ -364,7 +421,6 @@ function deleteProduct(idx) {
   toast('Produto removido. Clique em "Salvar no Sheets" para confirmar.', 'error');
 }
 
-// ── IMAGENS ────────────────────────────────────────────────────────────────
 function prevUrl(val) {
   if (!val) return 'https://placehold.co/80x80/131313/444?text=?';
   return val.trim().startsWith('http')
@@ -372,48 +428,81 @@ function prevUrl(val) {
     : BASE_URL_FOTOS + encodeURI(val.trim());
 }
 
-async function handleUpload() {
-  const setS = (msg, cls = '') => {
-    const el = document.getElementById('uploadStatus');
-    el.textContent = msg;
-    el.className = 'upload-status ' + cls;
+// ── CLOUDFLARE R2 INTEGRADO ────────────────────────────────────────────────
+function saveR2Config() {
+  const config = {
+    acct: document.getElementById('modalAcct').value.trim(),
+    bucket: document.getElementById('modalBucket').value.trim(),
+    token: document.getElementById('modalToken').value.trim(),
+    base: document.getElementById('modalBase').value.trim()
   };
+  localStorage.setItem('sport_closet_r2_config', JSON.stringify(config));
+}
 
-  const file = document.getElementById('imageFileUpload').files[0];
-  const acct = document.getElementById('cfAccountId').value.trim();
-  const bucket = document.getElementById('cfBucketName').value.trim();
-  const base = document.getElementById('cfR2BaseUrl').value.trim();
-  const token = document.getElementById('cfApiToken').value.trim();
-  const prodIdx = Number(document.getElementById('selectProductRow').value);
-  const field = document.getElementById('selectImageSlot').value;
+function loadR2Config() {
+  const raw = localStorage.getItem('sport_closet_r2_config');
+  if (!raw) return;
+  const c = JSON.parse(raw);
+  document.getElementById('modalAcct').value = c.acct || '';
+  document.getElementById('modalBucket').value = c.bucket || '';
+  document.getElementById('modalToken').value = c.token || '';
+  document.getElementById('modalBase').value = c.base || '';
+  
+  // Sincroniza com a aba de upload antiga (opcional)
+  if (document.getElementById('cfAccountId')) document.getElementById('cfAccountId').value = c.acct || '';
+  if (document.getElementById('cfBucketName')) document.getElementById('cfBucketName').value = c.bucket || '';
+  if (document.getElementById('cfApiToken')) document.getElementById('cfApiToken').value = c.token || '';
+  if (document.getElementById('cfR2BaseUrl')) document.getElementById('cfR2BaseUrl').value = c.base || '';
+}
 
-  if (!file) return setS('Escolha um arquivo de imagem.', 'err');
-  if (!acct || !bucket || !token) return setS('Informe Account ID, Bucket Name e API Token.', 'err');
-  if (!['img_1', 'img_2', 'img_3'].includes(field)) return setS('Slot inválido.', 'err');
+function triggerUpload(num) {
+  document.getElementById(`fileSlot${num}`).click();
+}
 
-  setS('Enviando para o Cloudflare R2…');
+async function handleSlotUpload(num) {
+  const file = document.getElementById(`fileSlot${num}`).files[0];
+  if (!file) return;
+
+  const acct = document.getElementById('modalAcct').value.trim();
+  const bucket = document.getElementById('modalBucket').value.trim();
+  const token = document.getElementById('modalToken').value.trim();
+  const base = document.getElementById('modalBase').value.trim();
+
+  if (!acct || !bucket || !token) {
+    toast('Configure as chaves do Cloudflare R2 primeiro!', 'error');
+    document.getElementById('settingsR2').style.display = 'block';
+    return;
+  }
+
+  toast(`Subindo "${file.name}" para o R2...`);
+  
   try {
     const ep = `https://api.cloudflare.com/client/v4/accounts/${encodeURIComponent(acct)}/r2/buckets/${encodeURIComponent(bucket)}/objects/${encodeURIComponent(file.name)}`;
     const res = await fetch(ep, {
       method: 'PUT',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': file.type || 'application/octet-stream' },
+      headers: { 
+        Authorization: `Bearer ${token}`, 
+        'Content-Type': file.type || 'application/octet-stream' 
+      },
       body: file
     });
-    const json = await res.json();
-    if (!res.ok || !json.success)
-      throw new Error(json.errors?.map(e => e.message).join(', ') || 'Upload falhou');
 
-    const url = base
-      ? `${base.replace(/\/$/, '')}/${encodeURIComponent(file.name)}`
-      : `https://${acct}.r2.cloudflarestorage.com/${bucket}/${encodeURIComponent(file.name)}`;
+    if (!res.ok) throw new Error(`Erro R2: ${res.status}`);
 
-    adminProducts[prodIdx][field] = url;
-    applyFilters();
-    setS(`✓ Imagem enviada e inserida em ${field} do produto ${prodIdx + 1}.`, 'ok');
-    toast('Upload concluído! Lembre de salvar no Sheets.');
+    const fileName = file.name;
+    const input = document.getElementById(`modalImg${num}`);
+    const prev = document.getElementById(`modalImg${num}Prev`);
+    
+    // Atualiza campo e preview
+    input.value = fileName;
+    prev.src = prevUrl(fileName);
+    
+    toast(`✓ Upload concluído: ${fileName}`);
   } catch (err) {
-    setS('Erro: ' + err.message, 'err');
-    toast('Erro no upload.', 'error');
+    console.error(err);
+    toast('Falha no upload R2: ' + err.message, 'error');
+  } finally {
+    document.getElementById(`fileSlot${num}`).value = ''; // Limpa o input file
   }
 }
 
@@ -466,6 +555,8 @@ function togglePass(inputId, btnId) {
 
 // ── INIT ───────────────────────────────────────────────────────────────────
 function initAdmin() {
+  loadR2Config(); // Carrega as chaves do Cloudflare salvas localmente
+
   document.querySelectorAll('.tab-btn, .nav-btn').forEach(b =>
     b.addEventListener('click', () => switchTab(b.dataset.tab)));
 
@@ -481,12 +572,24 @@ function initAdmin() {
   document.getElementById('btnCancelModal').addEventListener('click', closeProductModal);
   document.getElementById('btnSaveModal').addEventListener('click', saveProductModal);
 
+  // Toggle de Configurações R2 no Modal
+  document.getElementById('btnToggleSettings')?.addEventListener('click', () => {
+    const el = document.getElementById('settingsR2');
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  });
+
+  // Salvar config R2 ao digitar
+  ['modalAcct', 'modalBucket', 'modalToken', 'modalBase'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', saveR2Config);
+  });
+
   // Auto-preview no modal
   ['modalImg1', 'modalImg2', 'modalImg3'].forEach(id => {
     document.getElementById(id).addEventListener('input', e => {
       document.getElementById(`${id}Prev`).src = prevUrl(e.target.value);
     });
   });
+
 
 
   document.getElementById('btnLogout').addEventListener('click', () =>
