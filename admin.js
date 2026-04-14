@@ -258,42 +258,32 @@ function renderTable() {
   filteredIndices.forEach((ri, di) => {
     const p = adminProducts[ri];
     const tr = document.createElement('tr');
+    tr.className = 'clickable-row';
     tr.innerHTML = `
       <td class="row-num">${di + 1}</td>
-      <td><input data-i="${ri}" data-f="id"        value="${esc(p.id)}"         style="width:46px"></td>
-      <td><input data-i="${ri}" data-f="nome"       value="${esc(p.nome)}"></td>
-      <td><input data-i="${ri}" data-f="marca"      value="${esc(p.marca)}"     style="width:86px"></td>
-      <td><input data-i="${ri}" data-f="tipo"       value="${esc(p.tipo)}"      style="width:78px"></td>
-      <td><input data-i="${ri}" data-f="liga"       value="${esc(p.liga)}"      style="width:78px"></td>
-      <td><input data-i="${ri}" data-f="preco_brl"  value="${esc(p.preco_brl)}" style="width:66px"></td>
-      <td><input data-i="${ri}" data-f="preco_usa"  value="${esc(p.preco_usa)}" style="width:66px"></td>
+      <td class="col-id"><code>${esc(p.id)}</code></td>
+      <td class="col-nome"><strong>${esc(p.nome)}</strong></td>
+      <td class="col-marca">${esc(p.marca)}</td>
+      <td class="col-tipo">${esc(p.tipo)}</td>
+      <td class="col-liga">${esc(p.liga)}</td>
+      <td class="col-preco">${esc(p.preco_brl)}</td>
+      <td class="col-preco">${esc(p.preco_usa)}</td>
       <td class="img-cell">
-        <input data-i="${ri}" data-f="img_1" value="${esc(p.img_1)}">
         <img class="img-preview" src="${prevUrl(p.img_1)}" onerror="this.src='https://placehold.co/80x80/131313/444?text=?'">
       </td>
       <td class="img-cell">
-        <input data-i="${ri}" data-f="img_2" value="${esc(p.img_2)}">
         <img class="img-preview" src="${prevUrl(p.img_2)}" onerror="this.src='https://placehold.co/80x80/131313/444?text=?'">
       </td>
       <td class="img-cell">
-        <input data-i="${ri}" data-f="img_3" value="${esc(p.img_3)}">
         <img class="img-preview" src="${prevUrl(p.img_3)}" onerror="this.src='https://placehold.co/80x80/131313/444?text=?'">
       </td>
-      <td><textarea data-i="${ri}" data-f="tamanhos"  rows="2">${esc(p.tamanhos)}</textarea></td>
-      <td><textarea data-i="${ri}" data-f="descricao" rows="2">${esc(p.descricao)}</textarea></td>
+      <td class="col-txt">${esc(p.tamanhos)}</td>
+      <td class="col-txt">${esc(p.descricao)}</td>
       <td>
-        <input data-i="${ri}" data-f="badge" value="${esc(p.badge)}" style="width:78px">
         ${p.badge ? `<span class="badge-chip">${esc(p.badge)}</span>` : ''}
       </td>
       <td>
-        <div style="display:flex; gap:5px;">
-          <button class="btn btn-sm btn-edit" data-i="${ri}" title="Editar Detalhes">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
-          </button>
+        <div style="display:flex; gap:5px;" onclick="event.stopPropagation()">
           <button class="btn btn-sm btn-danger btn-del" data-i="${ri}" title="Excluir">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -305,6 +295,7 @@ function renderTable() {
         </div>
       </td>`;
 
+    tr.addEventListener('click', () => openProductModal(ri));
     tbody.appendChild(tr);
   });
 
@@ -319,11 +310,13 @@ function renderTable() {
 
   tbody.querySelectorAll('.btn-del').forEach(btn =>
     btn.addEventListener('click', e => {
+      e.stopPropagation(); // Evita abrir o modal ao deletar
       const idx = Number(e.currentTarget.dataset.i);
       const name = adminProducts[idx]?.nome || `#${idx + 1}`;
       showConfirm('Excluir produto', `Deseja excluir "${name}"?`, () => deleteProduct(idx));
     }));
 }
+
 
 function onInput(e) {
   const idx = Number(e.target.dataset.i);
@@ -337,22 +330,31 @@ function onInput(e) {
 }
 
 function addProduct() {
+  // Limpa filtros para garantir que o novo produto seja visível
+  if (document.getElementById('searchInput')) document.getElementById('searchInput').value = '';
+  if (document.getElementById('filterMarca')) document.getElementById('filterMarca').value = '';
+  if (document.getElementById('filterTipo')) document.getElementById('filterTipo').value = '';
+
   const maxId = adminProducts.length
     ? Math.max(...adminProducts.map(p => Number(p.id) || 0)) : 0;
-  adminProducts.push({
+  
+  const newProduct = {
     id: String(maxId + 1), nome: '', marca: '', tipo: '', liga: '',
     preco_brl: '', preco_usa: '',
     img_1: '', img_2: '', img_3: '',
     tamanhos: '', descricao: '', badge: ''
-  });
-  document.getElementById('searchInput').value = '';
-  document.getElementById('filterMarca').value = '';
-  document.getElementById('filterTipo').value = '';
+  };
+
+  adminProducts.push(newProduct);
   applyFilters();
   updateSidebar();
-  document.querySelector('.table-wrap').scrollTop = 99999;
-  toast('Produto adicionado. Preencha os campos e salve no Sheets.');
+  
+  // Abre o modal imediatamente para o novo produto
+  openProductModal(adminProducts.length - 1);
+  
+  toast('Novo rascunho criado. Preencha os dados e salve no Sheets.');
 }
+
 
 function deleteProduct(idx) {
   adminProducts.splice(idx, 1);

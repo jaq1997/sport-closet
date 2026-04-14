@@ -1,20 +1,21 @@
 /* ── VARS (espelha o style.css da loja) ────────────────────── */
 :root {
-  --black:   #080808;
+  --black:   #000000;
   --white:   #f0eeeb;
   --accent:  #FFA500;
-  --gray:    #131313;
-  --gray2:   #1e1e1e;
-  --gray3:   #2a2a2a;
-  --muted:   #666;
-  --danger:  #e03e3e;
+  --gray:    #0d0d0d;
+  --gray2:   #151515;
+  --gray3:   #222222;
+  --muted:   #888;
+  --danger:  #ff4d4d;
   --success: #25D366;
-  --radius:  2px;
+  --radius:  8px;
   --font-d:  'Bebas Neue', sans-serif;
   --font-b:  'DM Sans', sans-serif;
   --font-m:  'DM Mono', monospace;
-  --transition: .2s ease;
+  --transition: .25s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -243,9 +244,23 @@ table.prod-table th {
   font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
   color: var(--muted); white-space: nowrap;
 }
-table.prod-table td { padding: 7px 8px; border-bottom: 1px solid #111; vertical-align: top; }
-table.prod-table tr:last-child td { border-bottom: none; }
-table.prod-table tr:hover td { background: rgba(255,255,255,.02); }
+table.prod-table tr.clickable-row {
+  cursor: pointer;
+}
+table.prod-table tr:hover td { 
+  background: rgba(255,165,0,.04) !important; 
+}
+table.prod-table td { 
+  padding: 12px 10px; 
+  border-bottom: 1px solid #111; 
+  vertical-align: middle;
+  font-size: 13px;
+}
+.col-id code { background: var(--gray2); padding: 2px 6px; border-radius: 4px; color: var(--accent); }
+.col-nome strong { color: var(--white); font-weight: 600; }
+.col-preco { font-family: var(--font-m); color: var(--white); }
+.col-txt { color: var(--muted); font-size: 11px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
 
 table.prod-table td input,
 table.prod-table td textarea {
@@ -367,12 +382,14 @@ table.prod-table td textarea:focus { border-color: var(--accent); background: va
 .edit-modal.open { display: flex; }
 
 .modal-content {
-  background: var(--gray); border: 1px solid var(--gray3);
-  width: 100%; max-width: 800px; max-height: 90vh;
+  background: var(--black);
+  border: 1px solid var(--gray3);
+  width: 100%; max-width: 900px; max-height: 90vh;
   display: flex; flex-direction: column; overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0,0,0,.6);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.8);
   border-radius: var(--radius);
 }
+
 
 .modal-header {
   padding: 20px 24px; border-bottom: 1px solid #1a1a1a;
